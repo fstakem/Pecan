@@ -11,9 +11,12 @@
 import logging
 
 # Classes
+from MocapMath import Vector
 from MocapDataFormats import AcclaimBone
 from MocapDataFormats import AcclaimRoot
 from MocapDataFormats import AsfData
+from MocapDataFormats import Axis
+from MocapDataFormats import OperationOnAxis
 
 class AsfImporter(object):
     """This is a parsing class that imports data in the mocap ASF format."""
@@ -150,13 +153,16 @@ class AsfImporter(object):
             
             if tokens[0] == cls.ROOT_ORDER_LABEL:
                 for token in tokens[1:]:
-                    acclaim_root.amc_data_order.append(token)
+                    operation = OperationOnAxis.getOperationOnAxisFromString(token)
+                    acclaim_root.amc_data_order.append(operation)
             elif tokens[0] == cls.ROOT_AXIS_LABEL:
-                pass
+                for token in tokens[:]:
+                    axis = Axis.getAxisFromString(token)
+                    acclaim_root.orientation_order.append(axis)
             elif tokens[0] == cls.ROOT_POSITION_LABEL:
-                pass
+                acclaim_root.position = Vector(tokens[1], tokens[2], tokens[3])
             elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
-                pass
+                acclaim_root.orientation = Vector(tokens[1], tokens[2], tokens[3])
         
         cls.logger.info('parseRoot(): Exiting method.')
         return acclaim_root
@@ -165,13 +171,65 @@ class AsfImporter(object):
     def parseBones(cls, asf_sections):
         cls.logger.info('parseBones(): Entering method.')
         
+        lines = asf_sections[cls.BONES_KEYWORD]
+        acclaim_bones = []
+        bone_lines = None
+        
+        for line in lines:
+            tokens = line.split()
+            
+            if tokens[0] == cls.START_LABEL:
+                bone_lines = []
+            elif tokens[0] == cls.END_LABEL:
+                acclaim_bones.append( cls.parseBone(bone_lines) )
+            else:
+                bone_lines.append(line)
+        
         cls.logger.info('parseBones(): Exiting method.')
+        return acclaim_bones
     
     @classmethod
-    def parseBone(cls):
+    def parseBone(cls, lines):
         cls.logger.info('parseBone(): Entering method.')
         
+        acclaim_bone = AcclaimBone()
+        last_label = ''
+        
+        #self.id = 0
+        #self.name = ''
+        #self.direction = Vector()
+        #self.length = 0
+        #self.orientation = Vector()
+        #self.orientation_order = []
+        #self.dof = []
+        #self.limits = []
+        
+        for line in lines:
+            tokens = line.split()
+            
+            if tokens[0] == cls.BONE_ID_LABEL:
+                acclaim_bone.id = int(tokens[1])
+            elif tokens[0] == cls.BONE_NAME_LABEL:
+                acclaim_bone.name = tokens[1]
+            elif tokens[0] == cls.BONE_DIRECTION_LABEL:
+                acclaim_bone.direction = Vector(tokens[1], tokens[2], tokens[3])
+            elif tokens[0] == cls.BONE_LENGTH_LABEL:
+                acclaim_bone.length = float(tokens[1])
+            elif tokens[0] == cls.BONE_AXIS_LABEL:
+                acclaim_bone.orientation = Vector(tokens[1], tokens[2], tokens[3])
+                for i in range(len(tokens[4])):
+                    axis = Axis.getAxisFromString(tokens[4][i])
+                    acclaim_bone.orientation_order.append(axis)
+            elif tokens[0] == cls.BONE_DOF_LABEL:
+                for token in tokens[1:]:
+                    operation_on_axis = OperationOnAxis.getOperationOnAxisFromString(token)
+                    acclaim_bone.dof.append(operation_on_axis)
+            elif tokens[0] == cls.BONE_LIMITS_LABEL or last_label == cls.BONE_LIMITS_LABEL:
+                pass
+                # TODO
+            
         cls.logger.info('parseBone(): Exiting method.')
+        return acclaim_bone
     
     @classmethod
     def parseHierarchy(cls):
