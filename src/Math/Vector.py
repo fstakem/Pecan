@@ -7,7 +7,10 @@
 #  By: Fred Stakem 
 #  Date: 7.9.12
 
+# Libraries
 from math import *
+
+# Classes
 
 class Vector(object):
     """This is a three dimensional vector class. All basic 3D vector
