@@ -11,6 +11,9 @@
 import logging
 
 # Classes
+from MocapDataFormats import AcclaimBone
+from MocapDataFormats import AcclaimRoot
+from MocapDataFormats import AsfData
 
 class AsfImporter(object):
     """This is a parsing class that imports data in the mocap ASF format."""
@@ -22,7 +25,7 @@ class AsfImporter(object):
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-        
+           
     # Class constants
     COMMENT_CHAR = '#'
     KEYWORD_CHAR = ':'
@@ -35,6 +38,22 @@ class AsfImporter(object):
     HIERARCHY_KEYWORD = 'hierarchy'
     START_LABEL = 'begin'
     END_LABEL = 'end'
+    
+    ROOT_ORDER_LABEL = 'order'
+    ROOT_AXIS_LABEL = 'axis'
+    ROOT_POSITION_LABEL = 'position'
+    ROOT_ORIENTATION_LABEL = 'orientation'
+    
+    BONE_ID_LABEL = 'id'
+    BONE_NAME_LABEL = 'name'
+    BONE_DIRECTION_LABEL = 'direction'
+    BONE_POSITION_LABEL = 'position'
+    BONE_ORIENTATION_LABEL = 'orientation'
+    BONE_LENGTH_LABEL = 'length'
+    BONE_ORDER_LABEL = 'order'
+    BONE_AXIS_LABEL = 'axis'
+    BONE_DOF_LABEL = 'dof'
+    BONE_LIMITS_LABEL = 'limits'
     
     # -----------------------------------------------------------------------
     #       Class Functions
@@ -81,35 +100,69 @@ class AsfImporter(object):
         cls.logger.info('parseVersion(): Entering method.')
         
         lines = asf_sections[cls.VERSION_KEYWORD]
+        version = lines[0].split()[0]
         
         cls.logger.info('parseVersion(): Exiting method.')
+        return version
     
     @classmethod
-    def parseName(cls):
+    def parseName(cls, asf_sections):
         cls.logger.info('parseName(): Entering method.')
         
+        lines = asf_sections[cls.NAME_KEYWORD]
+        name = lines[0].split()[0]
+        
         cls.logger.info('parseName(): Exiting method.')
+        return name
     
     @classmethod
-    def parseUnits(cls):
+    def parseUnits(cls, asf_sections):
         cls.logger.info('parseUnits(): Entering method.')
         
+        lines = asf_sections[cls.UNITS_KEYWORD]
+        units = {}
+        
+        for line in lines:
+            tokens = line.split()
+            units[tokens[0]] = tokens[1]
+        
         cls.logger.info('parseUnits(): Exiting method.')
+        return units
     
     @classmethod
-    def parseDocumentation(cls):
+    def parseDocumentation(cls, asf_sections):
         cls.logger.info('parseDocumentation(): Entering method.')
         
+        lines = asf_sections[cls.DOCUMENTATION_KEYWORD]
+        
         cls.logger.info('parseDocumentation(): Exiting method.')
+        return lines
     
     @classmethod
-    def parseRoot(cls):
+    def parseRoot(cls, asf_sections):
         cls.logger.info('parseRoot(): Entering method.')
         
+        lines = asf_sections[cls.ROOT_KEYWORD]
+        acclaim_root = AcclaimRoot()
+        
+        for line in lines:
+            tokens = line.split()
+            
+            if tokens[0] == cls.ROOT_ORDER_LABEL:
+                for token in tokens[1:]:
+                    acclaim_root.amc_data_order.append(token)
+            elif tokens[0] == cls.ROOT_AXIS_LABEL:
+                pass
+            elif tokens[0] == cls.ROOT_POSITION_LABEL:
+                pass
+            elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
+                pass
+        
         cls.logger.info('parseRoot(): Exiting method.')
+        return acclaim_root
     
     @classmethod
-    def parseBones(cls):
+    def parseBones(cls, asf_sections):
         cls.logger.info('parseBones(): Entering method.')
         
         cls.logger.info('parseBones(): Exiting method.')

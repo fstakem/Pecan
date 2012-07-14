@@ -1,6 +1,6 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                        A C C L A I M  B O N E                           |
+#  |                        A C C L A I M  R O O T                           |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
@@ -13,11 +13,11 @@ import logging
 # Classes
 from MocapMath import Vector
 
-class AcclaimBone(object):
-    """This is a class that contains data in the Acclaim bone Mocap data format."""
+class AcclaimRoot(object):
+    """This is a class that contains data in the Acclaim root Mocap data format."""
     
     # Setup logging
-    logger = logging.getLogger('AcclaimBone')
+    logger = logging.getLogger('AcclaimRoot')
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
     handler = logging.StreamHandler()
@@ -31,18 +31,16 @@ class AcclaimBone(object):
     # -----------------------------------------------------------------------
     # None
     
-    
+        
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self):
-        self.id = 0
-        self.name = ''
-        self.direction = Vector()
-        self.length = 0
-        self.orientation = Vector()
+        self.amc_data_order = []
         self.orientation_order = []
-        self.dof = []
-        self.limits = []
-        
-        
+        self.position = Vector()
+        self.orientation = Vector()
+    
+    
+    
+    
