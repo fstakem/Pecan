@@ -8,11 +8,22 @@
 #  Date: 7.13.12
 
 # Libraries
+import logging
 
 # Classes
 
 class AmcImporter(object):
     """This is a parsing class that imports data in the mocap AMC format."""
+    
+    # Setup logging
+    logger = logging.getLogger('AmcImporter')
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    # Class constants
     
     # -----------------------------------------------------------------------
     #       Class Functions
@@ -25,23 +36,33 @@ class AmcImporter(object):
     # -----------------------------------------------------------------------
     @classmethod
     def seperateFrames(cls):
-        pass
+        cls.logger.info('seperateFrames(): Entering method.')
+        
+        cls.logger.info('seperateFrames(): Exiting method.')
     
     @classmethod
     def parseFrames(cls):
-        pass
+        cls.logger.info('parseFrames(): Entering method.')
+        
+        cls.logger.info('parseFrames(): Exiting method.')
     
     @classmethod
     def parseFrame(cls):
-        pass
+        cls.logger.info('parseFrame(): Entering method.')
+        
+        cls.logger.info('parseFrame(): Exiting method.')
     
     @classmethod
     def initializeBones(cls):
-        pass
+        cls.logger.info('initializeBones(): Entering method.')
+        
+        cls.logger.info('initializeBones(): Exiting method.')
     
     @classmethod
     def checkForAllBonesInFrame(cls):
-        pass
+        cls.logger.info('checkForAllBonesInFrame(): Entering method.')
+        
+        cls.logger.info('checkForAllBonesInFrame(): Exiting method.')
     
     
     

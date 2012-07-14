@@ -1,6 +1,6 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                         A S F  E X P O R T E R                          |
+#  |                             A M C  D A T A                              |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
@@ -12,11 +12,11 @@ import logging
 
 # Classes
 
-class AsfExporter(object):
-    """This is a class that exports data in the mocap ASF format."""
+class AmcData(object):
+    """This is a class that contains data in the AMC Mocap data format."""
     
     # Setup logging
-    logger = logging.getLogger('AsfExporter')
+    logger = logging.getLogger('AmcData')
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
     handler = logging.StreamHandler()

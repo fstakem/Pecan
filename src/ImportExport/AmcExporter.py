@@ -8,11 +8,22 @@
 #  Date: 7.13.12
 
 # Libraries
+import logging
 
 # Classes
 
 class AmcExporter(object):
     """This is a class that exports data in the mocap AMC format."""
+    
+    # Setup logging
+    logger = logging.getLogger('AmcExporter')
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    # Class constants
     
     # -----------------------------------------------------------------------
     #       Class Functions

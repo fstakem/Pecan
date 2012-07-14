@@ -8,6 +8,7 @@
 #  Date: 7.9.12
 
 # Libraries
+import logging
 from math import *
 
 # Classes
@@ -15,6 +16,16 @@ from math import *
 class Vector(object):
     """This is a three dimensional vector class. All basic 3D vector
        operations are included in this class."""
+       
+    # Setup logging
+    logger = logging.getLogger('Vector')
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    
+    # Class constants
     
     # -----------------------------------------------------------------------
     #       Class Functions
