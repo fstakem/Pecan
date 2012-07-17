@@ -232,10 +232,28 @@ class AsfImporter(object):
         return acclaim_bone
     
     @classmethod
-    def parseHierarchy(cls):
+    def parseHierarchy(cls, asf_sections):
         cls.logger.info('parseHierarchy(): Entering method.')
         
+        lines = asf_sections[cls.HIERARCHY_KEYWORD]
+        hierarchy = {}
+        
+        for line in lines:
+            tokens = line.split()
+            
+            if tokens[0] == cls.START_LABEL:
+                continue
+            elif tokens[0] == cls.END_LABEL:
+                break
+            
+            children = []
+            for token in tokens[1:]:
+                children.append(token)
+                
+            hierarchy[tokens[0]] = children
+        
         cls.logger.info('parseHierarchy(): Exiting method.')
+        return hierarchy
     
     # -----------------------------------------------------------------------
     #       Instance Functions

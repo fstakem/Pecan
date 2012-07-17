@@ -24,6 +24,8 @@ class AmcImporter(object):
     logger.addHandler(handler)
     
     # Class constants
+    COMMENT_CHAR = '#'
+    KEYWORD_CHAR = ':'
     
     # -----------------------------------------------------------------------
     #       Class Functions
@@ -35,14 +37,33 @@ class AmcImporter(object):
     #       Instance Functions
     # -----------------------------------------------------------------------
     @classmethod
-    def seperateFrames(cls):
+    def seperateFrames(cls, raw_lines):
         cls.logger.info('seperateFrames(): Entering method.')
         
+        frames = {}
+        frame_lines = []
+        
+        for raw_line in raw_lines:
+            line = raw_line.strip()
+            
+            if line.startswith(cls.COMMENT_CHAR) or line.startswith(cls.KEYWORD_CHAR):
+                continue
+            
+            tokens = line.split()
+            
+            if tokens[0].isdigit():
+                pass
+            else:
+                pass
+        
         cls.logger.info('seperateFrames(): Exiting method.')
+        return frames
     
     @classmethod
     def parseFrames(cls):
         cls.logger.info('parseFrames(): Entering method.')
+        
+        
         
         cls.logger.info('parseFrames(): Exiting method.')
     

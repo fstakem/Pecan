@@ -18,21 +18,33 @@ class Axis(object):
     X = 1
     Y = 2
     Z = 3
+    UNDEFINED = 1000
     
     # -----------------------------------------------------------------------
     #       Class Functions
     # -----------------------------------------------------------------------
     @classmethod
     def getAxisFromString(cls, axis):
-        pass
+        axis = axis.lower()
+        if axis == 'x':
+            return cls.X
+        elif axis == 'y':
+            return cls.Y
+        elif axis == 'z':
+            return cls.Z
+        
+        return cls.UNDEFINED
     
     @classmethod
     def toString(cls, axis):
-        pass
+        if axis == cls.X:
+            return 'X'
+        elif axis == cls.Y:
+            return 'Y'
+        elif axis == cls.Z:
+            return 'Z'
+        
+        return ''
 
 
 
-
-
-#public enum OperationOnAxis { TX, TY, TZ, RX, RY, RZ };
-#public enum Axis { X, Y, Z };
