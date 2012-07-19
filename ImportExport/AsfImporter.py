@@ -260,4 +260,9 @@ class AsfImporter(object):
     # -----------------------------------------------------------------------
     
     
-    
+# Simple class tests
+if __name__=='__main__':
+    asf_importer = AsfImporter()
+    print asf_importer.__dict__.keys()
+    print locals()
+     

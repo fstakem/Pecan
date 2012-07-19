@@ -1,6 +1,6 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                  A S F  I M P O R T E R  T E S T                        |
+#  |                   A M C  I M P O R T E R  T E S T                       |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
@@ -13,10 +13,10 @@ import unittest
 
 # Classes
 
-class AsfImporterTest(unittest.TestCase):
+class AmcImporterTest(unittest.TestCase):
        
     # Setup logging
-    logger = logging.getLogger('AsfImporterTest')
+    logger = logging.getLogger('AmcImporterTest')
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(levelname)s %(asctime)s %(name)s Line: %(lineno)d |  %(message)s')
     handler = logging.StreamHandler()
@@ -27,6 +27,21 @@ class AsfImporterTest(unittest.TestCase):
         pass
     
     def tearDown(self):
+        pass
+    
+    def testSeperateFrames(self):
+        pass
+    
+    def testParseFrames(self):
+        pass
+    
+    def testParseFrame(self):
+        pass
+    
+    def testInitializeBones(self):
+        pass
+    
+    def testCheckForAllBonesInFrame(self):
         pass
     
     def testXXX(self):
