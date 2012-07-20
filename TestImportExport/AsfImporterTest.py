@@ -26,19 +26,28 @@ class AsfImporterTest(unittest.TestCase):
     
     # Class variables
     asf_filename = ''
+    asf_keyword = 'KEYWORD'
     
     def setUp(self):
         AsfImporterTest.logger.info('Setting up for the test.')
         
         AsfImporterTest.logger.info('Importing data from the file: ' + AsfImporterTest.asf_filename)
+        self.asf_importer = AsfImporter()
         
         AsfImporterTest.logger.info('Separating the ASF data into separate sections.')
         self.asf_sections = {}
+        self.testseperateSections()
         
-        AsfImporterTest.logger.info('Testing that all of the different ASF sections have been properly found.')
-    
     def tearDown(self):
         pass
+    
+    def testseperateSections(self):
+        AsfImporterTest.logger.info('Testing that all of the different ASF sections have been properly found.')
+        asf_class_members = AsfImporter.__dict__.keys()
+        for asf_class_member in asf_class_members:
+            if asf_class_member.split('_')[-1] == AsfImporterTest.asf_keyword:
+                keyword = self.asf_importer.__getattribute__(asf_class_member)
+                self.asf_sections[keyword]
         
     def testParseVersion(self):
         pass

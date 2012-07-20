@@ -263,6 +263,9 @@ class AsfImporter(object):
 # Simple class tests
 if __name__=='__main__':
     asf_importer = AsfImporter()
-    print asf_importer.__dict__.keys()
-    print locals()
+    keys = AsfImporter.__dict__.keys()
+    
+    for key in keys:
+        print key + '    ' + str(asf_importer.__getattribute__(key))
+    
      
