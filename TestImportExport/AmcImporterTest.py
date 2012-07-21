@@ -30,22 +30,29 @@ class AmcImporterTest(unittest.TestCase):
         pass
     
     def testSeperateFrames(self):
-        pass
+        AmcImporterTest.logger.info('Starting: testSeperateFrames()')
+        # TODO
+        AmcImporterTest.logger.info('Finishing: testSeperateFrames()')
     
     def testParseFrames(self):
-        pass
+        AmcImporterTest.logger.info('Starting: testParseFrames()')
+        # TODO
+        AmcImporterTest.logger.info('Finishing: testParseFrames()')
     
     def testParseFrame(self):
-        pass
+        AmcImporterTest.logger.info('Starting: testParseFrame()')
+        # TODO
+        AmcImporterTest.logger.info('Finishing: testParseFrame()')
     
     def testInitializeBones(self):
-        pass
+        AmcImporterTest.logger.info('Starting: testInitializeBones()')
+        # TODO
+        AmcImporterTest.logger.info('Finishing: testInitializeBones()')
     
     def testCheckForAllBonesInFrame(self):
-        pass
-    
-    def testXXX(self):
-        pass
-    
+        AmcImporterTest.logger.info('Starting: testCheckForAllBonesInFrame()')
+        # TODO
+        AmcImporterTest.logger.info('Finishing: testCheckForAllBonesInFrame()')
+       
 if __name__=='__main__':
    unittest.main()

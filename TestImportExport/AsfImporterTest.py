@@ -36,42 +36,63 @@ class AsfImporterTest(unittest.TestCase):
         
         AsfImporterTest.logger.info('Separating the ASF data into separate sections.')
         self.asf_sections = {}
-        self.testseperateSections()
+        self.testSeperateSections()
         
     def tearDown(self):
         pass
     
-    def testseperateSections(self):
-        AsfImporterTest.logger.info('Testing that all of the different ASF sections have been properly found.')
+    def testSeperateSections(self):
+        AsfImporterTest.logger.info('Starting test: testSeperateSections()')
         asf_class_members = AsfImporter.__dict__.keys()
         for asf_class_member in asf_class_members:
             if asf_class_member.split('_')[-1] == AsfImporterTest.asf_keyword:
                 keyword = self.asf_importer.__getattribute__(asf_class_member)
-                self.asf_sections[keyword]
+                try:
+                    self.asf_sections[keyword]
+                except KeyError:
+                    assert False, 'The section %s was not properly separated.' % (keyword)
+        
+        AsfImporterTest.logger.info('Finishing: testSeperateSections()')
         
     def testParseVersion(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseVersion()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseVersion()')
     
     def testParseName(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseName()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseName()')
     
     def testParseUnits(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseUnits()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseUnits()')
     
     def testParseDocumentation(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseDocumentation()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseDocumentation()')
     
     def testParseRoot(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseRoot()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseRoot()')
     
     def testParseBones(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseBones()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseBones()')
     
     def testParseBone(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseBone()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseBone()')
     
     def testParseHierarchy(self):
-        pass
+        AsfImporterTest.logger.info('Starting: testParseHierarchy()')
+        # TODO
+        AsfImporterTest.logger.info('Finishing: testParseHierarchy()')
     
 if __name__=='__main__':
    unittest.main()
