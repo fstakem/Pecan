@@ -10,6 +10,7 @@
 # Libraries
 import logging
 import unittest
+from ImportExport import Utilities
 
 # Classes
 from ImportExport import AsfImporter
@@ -25,28 +26,41 @@ class AsfImporterTest(unittest.TestCase):
     logger.addHandler(handler)
     
     # Class variables
-    asf_filename = ''
+    asf_filename = '../data/asf.asf'
     asf_keyword = 'KEYWORD'
     
     def setUp(self):
         AsfImporterTest.logger.info('Setting up for the test.')
         
         AsfImporterTest.logger.info('Importing data from the file: ' + AsfImporterTest.asf_filename)
-        self.asf_importer = AsfImporter()
+        asf_lines = Utilities.readLinesFromFile(AsfImporterTest.asf_filename)
+        AsfImporterTest.logger.info('Read %i lines from the file.', len(asf_lines))
         
         AsfImporterTest.logger.info('Separating the ASF data into separate sections.')
-        self.asf_sections = {}
+        self.asf_sections = AsfImporter.seperateSections(asf_lines)
         self.testSeperateSections()
         
     def tearDown(self):
         pass
     
+    def testParseData(self):
+        AsfImporterTest.logger.info('Starting: testParseData()')
+        
+        # The other tests need the data in asf sections but this test needs the raw lines
+        AsfImporterTest.logger.info('Importing data from the file: ' + AsfImporterTest.asf_filename)
+        asf_lines = Utilities.readLinesFromFile(AsfImporterTest.asf_filename)
+        AsfImporterTest.logger.info('Read %i lines from the file.', len(asf_lines))
+        AsfImporter.parseBone(asf_lines)
+        
+        AsfImporterTest.logger.info('Finishing: testParseData()')
+    
     def testSeperateSections(self):
-        AsfImporterTest.logger.info('Starting test: testSeperateSections()')
+        AsfImporterTest.logger.info('Starting: testSeperateSections()')
         asf_class_members = AsfImporter.__dict__.keys()
         for asf_class_member in asf_class_members:
             if asf_class_member.split('_')[-1] == AsfImporterTest.asf_keyword:
-                keyword = self.asf_importer.__getattribute__(asf_class_member)
+                asf_importer = AsfImporter()
+                keyword = asf_importer.__getattribute__(asf_class_member)
                 try:
                     self.asf_sections[keyword]
                 except KeyError:

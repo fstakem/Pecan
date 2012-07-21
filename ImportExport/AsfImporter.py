@@ -62,6 +62,23 @@ class AsfImporter(object):
     #       Class Functions
     # -----------------------------------------------------------------------
     @classmethod
+    def parseData(cls, raw_lines):
+        cls.logger.info('parseData(): Entering method.')
+        
+        asf_data = AsfData()
+        asf_sections = cls.seperateSections(raw_lines)
+        asf_data.version = asf_sections[cls.VERSION_KEYWORD]
+        asf_data.name = asf_sections[cls.NAME_KEYWORD]
+        asf_data.units = asf_sections[cls.UNITS_KEYWORD]
+        asf_data.documentation = asf_sections[cls.DOCUMENTATION_KEYWORD]
+        asf_data.acclaim_root = asf_sections[cls.ROOT_KEYWORD]
+        asf_data.bones = asf_sections[cls.BONES_KEYWORD]
+        asf_data.hierarchy = asf_sections[cls.HIERARCHY_KEYWORD]
+        
+        cls.logger.info('parseData(): Exiting method.')
+        return asf_data
+    
+    @classmethod
     def seperateSections(cls, raw_lines):
         cls.logger.info('seperateSections(): Entering method.')
         
@@ -75,7 +92,7 @@ class AsfImporter(object):
             if line.startswith(cls.COMMENT_CHAR):
                 continue
             elif line.startswith(cls.KEYWORD_CHAR):
-                if len(current_lines) != 0:
+                if current_lines != None:
                     asf_sections[current_keyword] = current_lines
                     
                 tokens = line.split()
@@ -102,8 +119,13 @@ class AsfImporter(object):
     def parseVersion(cls, asf_sections):
         cls.logger.info('parseVersion(): Entering method.')
         
-        lines = asf_sections[cls.VERSION_KEYWORD]
-        version = lines[0].split()[0]
+        try:
+            lines = asf_sections[cls.VERSION_KEYWORD]
+            version = lines[0].split()[0]
+        except KeyError:
+            raise Exception("The asf version section was not found.")
+        except IndexError:
+            raise Exception("Error parsing the asf version data.")
         
         cls.logger.info('parseVersion(): Exiting method.')
         return version
@@ -112,8 +134,13 @@ class AsfImporter(object):
     def parseName(cls, asf_sections):
         cls.logger.info('parseName(): Entering method.')
         
-        lines = asf_sections[cls.NAME_KEYWORD]
-        name = lines[0].split()[0]
+        try:
+            lines = asf_sections[cls.NAME_KEYWORD]
+            name = lines[0].split()[0]
+        except KeyError:
+            raise Exception("The asf name section was not found.")
+        except IndexError:
+            raise Exception("Error parsing the asf name data.")
         
         cls.logger.info('parseName(): Exiting method.')
         return name
@@ -122,12 +149,22 @@ class AsfImporter(object):
     def parseUnits(cls, asf_sections):
         cls.logger.info('parseUnits(): Entering method.')
         
-        lines = asf_sections[cls.UNITS_KEYWORD]
+        try:
+            lines = asf_sections[cls.UNITS_KEYWORD]
+        except KeyError:
+            raise Exception("The asf units section was not found.")
+        
         units = {}
         
-        for line in lines:
-            tokens = line.split()
-            units[tokens[0]] = tokens[1]
+        if len(lines) > 0:
+            for line in lines:
+                tokens = line.split()
+                try:
+                    units[tokens[0]] = tokens[1]
+                except IndexError:
+                    raise Exception("Error parsing the asf unit data.")
+        else:
+            raise Exception("No asf unit section data found.")
         
         cls.logger.info('parseUnits(): Exiting method.')
         return units
@@ -136,7 +173,10 @@ class AsfImporter(object):
     def parseDocumentation(cls, asf_sections):
         cls.logger.info('parseDocumentation(): Entering method.')
         
-        lines = asf_sections[cls.DOCUMENTATION_KEYWORD]
+        try:
+            lines = asf_sections[cls.DOCUMENTATION_KEYWORD]
+        except KeyError:
+            cls.logger.info('Could not find the asf documentation section.')
         
         cls.logger.info('parseDocumentation(): Exiting method.')
         return lines
@@ -145,24 +185,36 @@ class AsfImporter(object):
     def parseRoot(cls, asf_sections):
         cls.logger.info('parseRoot(): Entering method.')
         
-        lines = asf_sections[cls.ROOT_KEYWORD]
+        try:
+            lines = asf_sections[cls.ROOT_KEYWORD]
+        except KeyError:
+            raise Exception("The asf root section was not found.")
+        
         acclaim_root = AcclaimRoot()
         
-        for line in lines:
-            tokens = line.split()
-            
-            if tokens[0] == cls.ROOT_ORDER_LABEL:
-                for token in tokens[1:]:
-                    operation = OperationOnAxis.getOperationOnAxisFromString(token)
-                    acclaim_root.amc_data_order.append(operation)
-            elif tokens[0] == cls.ROOT_AXIS_LABEL:
-                for token in tokens[:]:
-                    axis = Axis.getAxisFromString(token)
-                    acclaim_root.orientation_order.append(axis)
-            elif tokens[0] == cls.ROOT_POSITION_LABEL:
-                acclaim_root.position = Vector(tokens[1], tokens[2], tokens[3])
-            elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
-                acclaim_root.orientation = Vector(tokens[1], tokens[2], tokens[3])
+        if len(lines) > 3:
+            for line in lines:
+                tokens = line.split()
+                
+                try:
+                    if tokens[0] == cls.ROOT_ORDER_LABEL:
+                        for token in tokens[1:]:
+                            operation = OperationOnAxis.getOperationOnAxisFromString(token)
+                            acclaim_root.amc_data_order.append(operation)
+                    elif tokens[0] == cls.ROOT_AXIS_LABEL:
+                        for token in tokens[:]:
+                            axis = Axis.getAxisFromString(token)
+                            acclaim_root.orientation_order.append(axis)
+                    elif tokens[0] == cls.ROOT_POSITION_LABEL:
+                        acclaim_root.position = Vector(tokens[1], tokens[2], tokens[3])
+                    elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
+                        acclaim_root.orientation = Vector(tokens[1], tokens[2], tokens[3])
+                    else:
+                        raise Exception("Label in asf root section is unknown.")
+                except IndexError:
+                    raise Exception("Some data missing from a label in the asf root section.")
+        else:
+            raise Exception("The asf root section does not have all of the data.")
         
         cls.logger.info('parseRoot(): Exiting method.')
         return acclaim_root
@@ -171,19 +223,26 @@ class AsfImporter(object):
     def parseBones(cls, asf_sections):
         cls.logger.info('parseBones(): Entering method.')
         
-        lines = asf_sections[cls.BONES_KEYWORD]
+        try:
+            lines = asf_sections[cls.BONES_KEYWORD]
+        except KeyError:
+            raise Exception("The asf bones section was not found.")
+        
         acclaim_bones = []
         bone_lines = None
         
-        for line in lines:
-            tokens = line.split()
-            
-            if tokens[0] == cls.START_LABEL:
-                bone_lines = []
-            elif tokens[0] == cls.END_LABEL:
-                acclaim_bones.append( cls.parseBone(bone_lines) )
-            else:
-                bone_lines.append(line)
+        if len(lines) > 0:
+            for line in lines:
+                tokens = line.split()
+                
+                if tokens[0] == cls.START_LABEL:
+                    bone_lines = []
+                elif tokens[0] == cls.END_LABEL:
+                    acclaim_bones.append( cls.parseBone(bone_lines) )
+                else:
+                    bone_lines.append(line)
+        else:
+            raise Exception("No asf bones section data found.")
         
         cls.logger.info('parseBones(): Exiting method.')
         return acclaim_bones
@@ -235,22 +294,29 @@ class AsfImporter(object):
     def parseHierarchy(cls, asf_sections):
         cls.logger.info('parseHierarchy(): Entering method.')
         
-        lines = asf_sections[cls.HIERARCHY_KEYWORD]
+        try:
+            lines = asf_sections[cls.HIERARCHY_KEYWORD]
+        except KeyError:
+            raise Exception("The asf hierarchy section was not found.")
+        
         hierarchy = {}
         
-        for line in lines:
-            tokens = line.split()
-            
-            if tokens[0] == cls.START_LABEL:
-                continue
-            elif tokens[0] == cls.END_LABEL:
-                break
-            
-            children = []
-            for token in tokens[1:]:
-                children.append(token)
+        if len(lines) > 0:
+            for line in lines:
+                tokens = line.split()
                 
-            hierarchy[tokens[0]] = children
+                if tokens[0] == cls.START_LABEL:
+                    continue
+                elif tokens[0] == cls.END_LABEL:
+                    break
+                
+                children = []
+                for token in tokens[1:]:
+                    children.append(token)
+                    
+                hierarchy[tokens[0]] = children
+        else:
+            raise Exception("No asf hierarchy section data found.")
         
         cls.logger.info('parseHierarchy(): Exiting method.')
         return hierarchy

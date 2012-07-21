@@ -11,6 +11,8 @@
 import logging
 
 # Classes
+from AcclaimRoot import AcclaimRoot
+from AcclaimBone import AcclaimBone
 
 class AsfData(object):
     """This is a class that contains data in the ASF Mocap data format."""
@@ -35,4 +37,12 @@ class AsfData(object):
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self):
-        pass
+        self.version = ''
+        self.name = ''
+        self.units = {}
+        self.documentation = ''
+        self.acclaim_root = None
+        self.bones = []
+        self.hierarchy = {}
+     
+    
