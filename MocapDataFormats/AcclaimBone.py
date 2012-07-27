@@ -45,4 +45,16 @@ class AcclaimBone(object):
         self.dof = []
         self.limits = []
         
+    def __str__(self):
+        output = 'Bone: %s (%d)\n' % (self.name, self.id)
+        output += 'Direction: %s  Length: %d\n' % (self.direction.toString('(', ', ', ')'), self.length)
+        output += 'Orientation: %s  Order: %s\n' % (self.orientation.toString('(', ', ', ')'), ' '.join(self.orientation_order))
+        output += 'Dof: %s\n' % (' '.join( str(self.dof)[1:-1].split(',') ))
+        
+        for limit in self.limits:
+            limit_str = ' '.join( str(limit)[1:-1].split(',') )
+            output += 'Limits: %s\n' % (limit_str)
+        
+        return output
+        
         

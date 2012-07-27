@@ -2,4 +2,5 @@ from AsfImporter import AsfImporter
 from AmcImporter import AmcImporter
 from AsfExporter import AsfExporter
 from AmcExporter import AmcExporter
+from AcclaimParseException import AcclaimParseException
 import Utilities

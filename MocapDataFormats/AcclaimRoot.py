@@ -40,6 +40,15 @@ class AcclaimRoot(object):
         self.orientation_order = []
         self.position = Vector()
         self.orientation = Vector()
+        
+    def __str__(self):
+        output = 'Root:\n'
+        output += 'Order: %s\n' %( ' '.join( str(self.amc_data_order)[1:-1].split(',') ) )
+        output += 'Axis: %s\n' %( ' '.join( str(self.orientation_order)[1:-1].split(',') ) )
+        output += 'Position: %s\n' %( self.position.toString('(', ', ', ')') )
+        output += 'Orientation: %s\n' %( self.orientation.toString('(', ', ', ')') )
+        
+        return output
     
     
     

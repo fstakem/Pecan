@@ -47,13 +47,13 @@ class Vector(object):
                 self.y = args[0].y
                 self.z = args[0].z
             elif isinstance(args[0], (list, tuple)) and len(args[0]) == 3:
-                self.x = args[0][0]
-                self.y = args[0][1]
-                self.z = args[0][2]
+                self.x = float(args[0][0])
+                self.y = float(args[0][1])
+                self.z = float(args[0][2])
         elif len(args) == 3:
-            self.x = args[0]
-            self.y = args[1]
-            self.z = args[2]
+            self.x = float(args[0])
+            self.y = float(args[1])
+            self.z = float(args[2])
                 
     def __neg__(self):
         self.x = -self.x

@@ -17,6 +17,7 @@ from MocapDataFormats import AcclaimRoot
 from MocapDataFormats import AsfData
 from MocapDataFormats import Axis
 from MocapDataFormats import OperationOnAxis
+from AcclaimParseException import AcclaimParseException
 
 class AsfImporter(object):
     """This is a parsing class that imports data in the mocap ASF format."""
@@ -111,6 +112,9 @@ class AsfImporter(object):
                 
         if current_lines != None:
             asf_sections[current_keyword] = current_lines
+            
+        for key in asf_sections.keys():
+            cls.logger.info('Found the ASF section: %s' % (key))
         
         cls.logger.info('seperateSections(): Exiting method.')
         return asf_sections
@@ -121,12 +125,13 @@ class AsfImporter(object):
         
         try:
             lines = asf_sections[cls.VERSION_KEYWORD]
-            version = lines[0].split()[0]
+            version = lines[0].split()[1]
         except KeyError:
-            raise Exception("The asf version section was not found.")
+            raise AcclaimParseException("Asf version section was not found.")
         except IndexError:
-            raise Exception("Error parsing the asf version data.")
+            raise AcclaimParseException("Error parsing the asf version data.")
         
+        cls.logger.info('Found version: %s' % (version))
         cls.logger.info('parseVersion(): Exiting method.')
         return version
     
@@ -136,12 +141,13 @@ class AsfImporter(object):
         
         try:
             lines = asf_sections[cls.NAME_KEYWORD]
-            name = lines[0].split()[0]
+            name = lines[0].split()[1]
         except KeyError:
-            raise Exception("The asf name section was not found.")
+            raise AcclaimParseException("Asf name section was not found.")
         except IndexError:
-            raise Exception("Error parsing the asf name data.")
+            raise AcclaimParseException("Error parsing the asf name data.")
         
+        cls.logger.info('Found name: %s' % (name))
         cls.logger.info('parseName(): Exiting method.')
         return name
     
@@ -152,7 +158,7 @@ class AsfImporter(object):
         try:
             lines = asf_sections[cls.UNITS_KEYWORD]
         except KeyError:
-            raise Exception("The asf units section was not found.")
+            raise AcclaimParseException("Asf units section was not found.")
         
         units = {}
         
@@ -162,9 +168,12 @@ class AsfImporter(object):
                 try:
                     units[tokens[0]] = tokens[1]
                 except IndexError:
-                    raise Exception("Error parsing the asf unit data.")
+                    raise AcclaimParseException("Error parsing the asf unit data.")
         else:
-            raise Exception("No asf unit section data found.")
+            raise AcclaimParseException("No data found for the asf unit section.")
+        
+        for key in units.keys():
+            cls.logger.info('Found unit: %s => %s' % (key, units[key]))  
         
         cls.logger.info('parseUnits(): Exiting method.')
         return units
@@ -178,6 +187,9 @@ class AsfImporter(object):
         except KeyError:
             cls.logger.info('Could not find the asf documentation section.')
         
+        for line in lines:
+            cls.logger.info('Found documentation line: %s' % (line))
+            
         cls.logger.info('parseDocumentation(): Exiting method.')
         return lines
     
@@ -188,7 +200,7 @@ class AsfImporter(object):
         try:
             lines = asf_sections[cls.ROOT_KEYWORD]
         except KeyError:
-            raise Exception("The asf root section was not found.")
+            raise AcclaimParseException("Asf root section was not found.")
         
         acclaim_root = AcclaimRoot()
         
@@ -210,12 +222,13 @@ class AsfImporter(object):
                     elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
                         acclaim_root.orientation = Vector(tokens[1], tokens[2], tokens[3])
                     else:
-                        raise Exception("Label in asf root section is unknown.")
+                        raise AcclaimParseException("Label in asf root section is unknown.")
                 except IndexError:
-                    raise Exception("Some data missing from a label in the asf root section.")
+                    raise AcclaimParseException("Data missing from a label in the asf root section.")
         else:
-            raise Exception("The asf root section does not have all of the data.")
+            raise AcclaimParseException("Asf root section does not have all of the data.")
         
+        cls.logger.info('Found root: %s' % (str(acclaim_root)))
         cls.logger.info('parseRoot(): Exiting method.')
         return acclaim_root
     
@@ -226,7 +239,7 @@ class AsfImporter(object):
         try:
             lines = asf_sections[cls.BONES_KEYWORD]
         except KeyError:
-            raise Exception("The asf bones section was not found.")
+            raise AcclaimParseException("Asf bones section was not found.")
         
         acclaim_bones = []
         bone_lines = None
@@ -242,7 +255,7 @@ class AsfImporter(object):
                 else:
                     bone_lines.append(line)
         else:
-            raise Exception("No asf bones section data found.")
+            raise AcclaimParseException("No data found in the asf bones section.")
         
         cls.logger.info('parseBones(): Exiting method.')
         return acclaim_bones
@@ -253,40 +266,45 @@ class AsfImporter(object):
         
         acclaim_bone = AcclaimBone()
         last_label = ''
-        
-        #self.id = 0
-        #self.name = ''
-        #self.direction = Vector()
-        #self.length = 0
-        #self.orientation = Vector()
-        #self.orientation_order = []
-        #self.dof = []
-        #self.limits = []
-        
+         
         for line in lines:
             tokens = line.split()
             
-            if tokens[0] == cls.BONE_ID_LABEL:
-                acclaim_bone.id = int(tokens[1])
-            elif tokens[0] == cls.BONE_NAME_LABEL:
-                acclaim_bone.name = tokens[1]
-            elif tokens[0] == cls.BONE_DIRECTION_LABEL:
-                acclaim_bone.direction = Vector(tokens[1], tokens[2], tokens[3])
-            elif tokens[0] == cls.BONE_LENGTH_LABEL:
-                acclaim_bone.length = float(tokens[1])
-            elif tokens[0] == cls.BONE_AXIS_LABEL:
-                acclaim_bone.orientation = Vector(tokens[1], tokens[2], tokens[3])
-                for i in range(len(tokens[4])):
-                    axis = Axis.getAxisFromString(tokens[4][i])
-                    acclaim_bone.orientation_order.append(axis)
-            elif tokens[0] == cls.BONE_DOF_LABEL:
-                for token in tokens[1:]:
-                    operation_on_axis = OperationOnAxis.getOperationOnAxisFromString(token)
-                    acclaim_bone.dof.append(operation_on_axis)
-            elif tokens[0] == cls.BONE_LIMITS_LABEL or last_label == cls.BONE_LIMITS_LABEL:
-                pass
-                # TODO
-            
+            try:
+                if tokens[0] == cls.BONE_ID_LABEL:
+                    acclaim_bone.id = int(tokens[1])
+                elif tokens[0] == cls.BONE_NAME_LABEL:
+                    acclaim_bone.name = tokens[1]
+                elif tokens[0] == cls.BONE_DIRECTION_LABEL:
+                    acclaim_bone.direction = Vector(tokens[1], tokens[2], tokens[3])
+                elif tokens[0] == cls.BONE_LENGTH_LABEL:
+                    acclaim_bone.length = float(tokens[1])
+                elif tokens[0] == cls.BONE_AXIS_LABEL:
+                    acclaim_bone.orientation = Vector(tokens[1], tokens[2], tokens[3])
+                    for i in range(len(tokens[4])):
+                        axis = Axis.getAxisFromString(tokens[4][i])
+                        acclaim_bone.orientation_order.append(axis)
+                elif tokens[0] == cls.BONE_DOF_LABEL:
+                    for token in tokens[1:]:
+                        operation_on_axis = OperationOnAxis.getOperationOnAxisFromString(token)
+                        acclaim_bone.dof.append(operation_on_axis)
+                elif tokens[0] == cls.BONE_LIMITS_LABEL or last_label == cls.BONE_LIMITS_LABEL:
+                    reformatted_line = line.replace(cls.BONE_LIMITS_LABEL, '')
+                    reformatted_line = reformatted_line.replace('(', '')
+                    reformatted_line = reformatted_line.replace(')', '')
+                    tokens = line.split()
+                    
+                    limits = []
+                    for token in tokens:
+                        limits.append(float(token))
+                    acclaim_bone.limits.append(limits)
+                    
+            except IndexError:
+                raise AcclaimParseException("Data is missing from a label in one of the bones.")
+            except ValueError:
+                raise AcclaimParseException("Data from one of the bone labels is not the right type.")
+        
+        cls.logger.info('Found bone: %s' % (str(acclaim_bone)))    
         cls.logger.info('parseBone(): Exiting method.')
         return acclaim_bone
     
@@ -297,7 +315,7 @@ class AsfImporter(object):
         try:
             lines = asf_sections[cls.HIERARCHY_KEYWORD]
         except KeyError:
-            raise Exception("The asf hierarchy section was not found.")
+            raise AcclaimParseException("Asf hierarchy section was not found.")
         
         hierarchy = {}
         
@@ -316,7 +334,10 @@ class AsfImporter(object):
                     
                 hierarchy[tokens[0]] = children
         else:
-            raise Exception("No asf hierarchy section data found.")
+            raise AcclaimParseException("No data found in the asf hierarchy section.")
+        
+        for key in hierarchy.keys():
+            cls.logger.info('Found hierarchy node: %s %s' % ( str(key, ' '.join(str(hierarchy[key])[1:-1].split(', '))) ))
         
         cls.logger.info('parseHierarchy(): Exiting method.')
         return hierarchy
