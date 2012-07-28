@@ -10,6 +10,7 @@
 # Libraries
 import logging
 import unittest
+import traceback
 from ImportExport import Utilities
 
 # Classes
@@ -131,6 +132,7 @@ class AsfImporterTest(unittest.TestCase):
             root = AsfImporter.parseRoot(self.asf_sections)
             assert root.position == AsfImporterTest.ROOT_POSITION, 'Incorrect value for the root position: %s' % (str(root.position))
         except AcclaimParseException:
+            traceback.print_exc()
             assert False, 'The root section was not properly parsed.'
             
         AsfImporterTest.logger.info('Finishing: testParseRoot()')

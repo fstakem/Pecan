@@ -12,6 +12,8 @@ import logging
 
 # Classes
 from MocapMath import Vector
+from MocapDataFormats import Axis
+from MocapDataFormats import OperationOnAxis
 
 class AcclaimBone(object):
     """This is a class that contains data in the Acclaim bone Mocap data format."""
@@ -48,8 +50,22 @@ class AcclaimBone(object):
     def __str__(self):
         output = 'Bone: %s (%d)\n' % (self.name, self.id)
         output += 'Direction: %s  Length: %d\n' % (self.direction.toString('(', ', ', ')'), self.length)
-        output += 'Orientation: %s  Order: %s\n' % (self.orientation.toString('(', ', ', ')'), ' '.join(self.orientation_order))
-        output += 'Dof: %s\n' % (' '.join( str(self.dof)[1:-1].split(',') ))
+        
+        token_str = ''
+        for i, order in enumerate(self.orientation_order):
+            token_str += Axis.toString(order) 
+            if i < len(self.orientation_order) - 1:
+                token_str += ' '
+                
+        output += 'Orientation: %s  Orientation Order: %s\n' % (self.orientation.toString('(', ', ', ')'), token_str)
+        
+        token_str = ''
+        for i, order in enumerate(self.dof):
+            token_str += OperationOnAxis.toString(order) 
+            if i < len(self.dof) - 1:
+                token_str += ' '
+        
+        output += 'Dof: %s\n' % (token_str)
         
         for limit in self.limits:
             limit_str = ' '.join( str(limit)[1:-1].split(',') )

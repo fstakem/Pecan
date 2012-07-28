@@ -203,6 +203,8 @@ class AsfImporter(object):
             raise AcclaimParseException("Asf root section was not found.")
         
         acclaim_root = AcclaimRoot()
+        print '***ROOT***'
+        print lines
         
         if len(lines) > 3:
             for line in lines:
@@ -214,9 +216,9 @@ class AsfImporter(object):
                             operation = OperationOnAxis.getOperationOnAxisFromString(token)
                             acclaim_root.amc_data_order.append(operation)
                     elif tokens[0] == cls.ROOT_AXIS_LABEL:
-                        for token in tokens[:]:
-                            axis = Axis.getAxisFromString(token)
-                            acclaim_root.orientation_order.append(axis)
+                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[0]))
+                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[1]))
+                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[2]))
                     elif tokens[0] == cls.ROOT_POSITION_LABEL:
                         acclaim_root.position = Vector(tokens[1], tokens[2], tokens[3])
                     elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:

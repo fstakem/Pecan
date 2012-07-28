@@ -59,5 +59,5 @@ class OperationOnAxis(object):
         elif operation_on_axis == cls.TZ:
             return 'TZ'
         
-        return ''
+        return '?'
 

@@ -44,7 +44,7 @@ class Axis(object):
         elif axis == cls.Z:
             return 'Z'
         
-        return ''
+        return '?'
 
 
 

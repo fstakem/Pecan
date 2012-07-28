@@ -12,6 +12,8 @@ import logging
 
 # Classes
 from MocapMath import Vector
+from MocapDataFormats import Axis
+from MocapDataFormats import OperationOnAxis
 
 class AcclaimRoot(object):
     """This is a class that contains data in the Acclaim root Mocap data format."""
@@ -43,8 +45,22 @@ class AcclaimRoot(object):
         
     def __str__(self):
         output = 'Root:\n'
-        output += 'Order: %s\n' %( ' '.join( str(self.amc_data_order)[1:-1].split(',') ) )
-        output += 'Axis: %s\n' %( ' '.join( str(self.orientation_order)[1:-1].split(',') ) )
+        
+        token_str = ''
+        for i, order in enumerate(self.amc_data_order):
+            token_str += OperationOnAxis.toString(order) 
+            if i < len(self.amc_data_order) - 1:
+                token_str += ' '
+        
+        output += 'Data Order: %s\n' %( token_str )
+        
+        token_str = ''
+        for i, order in enumerate(self.orientation_order):
+            token_str += Axis.toString(order) 
+            if i < len(self.orientation_order) - 1:
+                token_str += ' '
+        
+        output += 'Orientation Order: %s\n' %( token_str )
         output += 'Position: %s\n' %( self.position.toString('(', ', ', ')') )
         output += 'Orientation: %s\n' %( self.orientation.toString('(', ', ', ')') )
         
