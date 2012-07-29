@@ -189,7 +189,8 @@ class AsfImporter(object):
         
         for line in lines:
             cls.logger.info('Found documentation line: %s' % (line))
-            
+          
+        cls.logger.info('Found documentation: %s' % (str(lines)))  
         cls.logger.info('parseDocumentation(): Exiting method.')
         return lines
     
@@ -203,8 +204,6 @@ class AsfImporter(object):
             raise AcclaimParseException("Asf root section was not found.")
         
         acclaim_root = AcclaimRoot()
-        print '***ROOT***'
-        print lines
         
         if len(lines) > 3:
             for line in lines:
@@ -213,12 +212,11 @@ class AsfImporter(object):
                 try:
                     if tokens[0] == cls.ROOT_ORDER_LABEL:
                         for token in tokens[1:]:
-                            operation = OperationOnAxis.getOperationOnAxisFromString(token)
-                            acclaim_root.amc_data_order.append(operation)
+                            acclaim_root.amc_data_order.append(OperationOnAxis(token))
                     elif tokens[0] == cls.ROOT_AXIS_LABEL:
-                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[0]))
-                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[1]))
-                        acclaim_root.orientation_order.append(Axis.getAxisFromString(tokens[2]))
+                        acclaim_root.orientation_order.append(Axis(tokens[1][0]))
+                        acclaim_root.orientation_order.append(Axis(tokens[1][1]))
+                        acclaim_root.orientation_order.append(Axis(tokens[1][2]))
                     elif tokens[0] == cls.ROOT_POSITION_LABEL:
                         acclaim_root.position = Vector(tokens[1], tokens[2], tokens[3])
                     elif tokens[0] == cls.ROOT_ORIENTATION_LABEL:
@@ -268,7 +266,7 @@ class AsfImporter(object):
         
         acclaim_bone = AcclaimBone()
         last_label = ''
-         
+           
         for line in lines:
             tokens = line.split()
             
@@ -278,32 +276,35 @@ class AsfImporter(object):
                 elif tokens[0] == cls.BONE_NAME_LABEL:
                     acclaim_bone.name = tokens[1]
                 elif tokens[0] == cls.BONE_DIRECTION_LABEL:
-                    acclaim_bone.direction = Vector(tokens[1], tokens[2], tokens[3])
+                    acclaim_bone.direction = Vector(float(tokens[1]), float(tokens[2]), float(tokens[3]))
                 elif tokens[0] == cls.BONE_LENGTH_LABEL:
                     acclaim_bone.length = float(tokens[1])
                 elif tokens[0] == cls.BONE_AXIS_LABEL:
-                    acclaim_bone.orientation = Vector(tokens[1], tokens[2], tokens[3])
+                    acclaim_bone.orientation = Vector(float(tokens[1]), float(tokens[2]), float(tokens[3]))
                     for i in range(len(tokens[4])):
-                        axis = Axis.getAxisFromString(tokens[4][i])
+                        axis = Axis(tokens[4][i])
                         acclaim_bone.orientation_order.append(axis)
                 elif tokens[0] == cls.BONE_DOF_LABEL:
                     for token in tokens[1:]:
-                        operation_on_axis = OperationOnAxis.getOperationOnAxisFromString(token)
+                        operation_on_axis = OperationOnAxis(token)
                         acclaim_bone.dof.append(operation_on_axis)
                 elif tokens[0] == cls.BONE_LIMITS_LABEL or last_label == cls.BONE_LIMITS_LABEL:
-                    reformatted_line = line.replace(cls.BONE_LIMITS_LABEL, '')
+                    reformatted_line = line.replace(cls.BONE_LIMITS_LABEL, '').strip()
                     reformatted_line = reformatted_line.replace('(', '')
                     reformatted_line = reformatted_line.replace(')', '')
-                    tokens = line.split()
+                    tokens = reformatted_line.split()
                     
                     limits = []
                     for token in tokens:
                         limits.append(float(token))
                     acclaim_bone.limits.append(limits)
+                    last_label = cls.BONE_LIMITS_LABEL
                     
             except IndexError:
+                print tokens
                 raise AcclaimParseException("Data is missing from a label in one of the bones.")
             except ValueError:
+                print tokens
                 raise AcclaimParseException("Data from one of the bone labels is not the right type.")
         
         cls.logger.info('Found bone: %s' % (str(acclaim_bone)))    
@@ -339,14 +340,15 @@ class AsfImporter(object):
             raise AcclaimParseException("No data found in the asf hierarchy section.")
         
         for key in hierarchy.keys():
-            cls.logger.info('Found hierarchy node: %s %s' % ( str(key, ' '.join(str(hierarchy[key])[1:-1].split(', '))) ))
-        
+            cls.logger.info('Found hierarchy node: %s %s' % ( str(key), str(hierarchy[key]) ) )
+                            
         cls.logger.info('parseHierarchy(): Exiting method.')
         return hierarchy
     
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
+    # None
     
     
 # Simple class tests

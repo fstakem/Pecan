@@ -48,28 +48,31 @@ class AcclaimBone(object):
         self.limits = []
         
     def __str__(self):
-        output = 'Bone: %s (%d)\n' % (self.name, self.id)
-        output += 'Direction: %s  Length: %d\n' % (self.direction.toString('(', ', ', ')'), self.length)
+        output = '%s (%d) ' % (self.name, self.id)
+        output += 'Direction: %s Length: %d ' % (self.direction.toString('(', ', ', ')'), self.length)
         
         token_str = ''
         for i, order in enumerate(self.orientation_order):
-            token_str += Axis.toString(order) 
+            token_str += str(order) 
             if i < len(self.orientation_order) - 1:
                 token_str += ' '
                 
-        output += 'Orientation: %s  Orientation Order: %s\n' % (self.orientation.toString('(', ', ', ')'), token_str)
+        output += 'Orientation: %s Orientation Order: %s ' % (self.orientation.toString('(', ', ', ')'), token_str)
         
         token_str = ''
         for i, order in enumerate(self.dof):
-            token_str += OperationOnAxis.toString(order) 
+            token_str += str(order)
             if i < len(self.dof) - 1:
                 token_str += ' '
         
-        output += 'Dof: %s\n' % (token_str)
+        output += 'Dof: %s ' % (token_str)
         
-        for limit in self.limits:
-            limit_str = ' '.join( str(limit)[1:-1].split(',') )
-            output += 'Limits: %s\n' % (limit_str)
+        output += 'Limits: '
+        for i, limit in enumerate(self.limits):
+            limit_str = ''.join( str(limit)[1:-1].split(',') )
+            output += '%s' % (limit_str)
+            if i < len(self.limits) -1:
+                output += ' :: '
         
         return output
         

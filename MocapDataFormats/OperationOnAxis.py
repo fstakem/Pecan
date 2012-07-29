@@ -21,43 +21,52 @@ class OperationOnAxis(object):
     RX = 4
     RY = 5
     RZ = 6
-    UNDEFINED = 1000
     
     # -----------------------------------------------------------------------
     #       Class Functions
     # -----------------------------------------------------------------------
-    @classmethod
-    def getOperationOnAxisFromString(cls, operation_on_axis):
-        operation_on_axis = operation_on_axis.lower()
-        if operation_on_axis == 'tx':
-            return cls.TX
-        elif operation_on_axis == 'ty':
-            return cls.TY
-        elif operation_on_axis == 'tz':
-            return cls.TZ
-        elif operation_on_axis == 'rx':
-            return cls.RX
-        elif operation_on_axis == 'ry':
-            return cls.RY
-        elif operation_on_axis == 'rz':
-            return cls.RZ
-        
-        return cls.UNDEFINED
+    # None
     
-    @classmethod
-    def toString(cls, operation_on_axis):
-        if operation_on_axis == cls.RX:
-            return 'RX'
-        elif operation_on_axis == cls.RY:
-            return 'RY'
-        elif operation_on_axis == cls.RZ:
-            return 'RZ'
-        elif operation_on_axis == cls.TX:
-            return 'TX'
-        elif operation_on_axis == cls.TY:
-            return 'TY'
-        elif operation_on_axis == cls.TZ:
-            return 'TZ'
+    
+    # -----------------------------------------------------------------------
+    #       Instance Functions
+    # -----------------------------------------------------------------------
+    def __init__(self, operation_on_axis_str):
+        self.value = None
         
-        return '?'
+        operation_on_axis = operation_on_axis_str.lower()
+        if operation_on_axis == 'tx':
+            self.value = OperationOnAxis.TX
+        elif operation_on_axis == 'ty':
+            self.value = OperationOnAxis.TY
+        elif operation_on_axis == 'tz':
+            self.value = OperationOnAxis.TZ
+        elif operation_on_axis == 'rx':
+            self.value = OperationOnAxis.RX
+        elif operation_on_axis == 'ry':
+            self.value = OperationOnAxis.RY
+        elif operation_on_axis == 'rz':
+            self.value = OperationOnAxis.RZ
+        else:
+            raise Exception('Incorrect value: %s' % (str(operation_on_axis_str)))
+        
+    def __str__(self):
+        if self.value == OperationOnAxis.RX:
+            return 'RX'
+        elif self.value == OperationOnAxis.RY:
+            return 'RY'
+        elif self.value == OperationOnAxis.RZ:
+            return 'RZ'
+        elif self.value == OperationOnAxis.TX:
+            return 'TX'
+        elif self.value == OperationOnAxis.TY:
+            return 'TY'
+        elif self.value == OperationOnAxis.TZ:
+            return 'TZ'
+    
+    def __eq__(self, other):
+        if self.value == other.value:
+            return True
+        
+        return False
 

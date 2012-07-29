@@ -44,25 +44,25 @@ class AcclaimRoot(object):
         self.orientation = Vector()
         
     def __str__(self):
-        output = 'Root:\n'
+        output = ''
         
         token_str = ''
         for i, order in enumerate(self.amc_data_order):
-            token_str += OperationOnAxis.toString(order) 
+            token_str += str(order) 
             if i < len(self.amc_data_order) - 1:
                 token_str += ' '
         
-        output += 'Data Order: %s\n' %( token_str )
+        output += 'Data Order: %s ' %( token_str )
         
         token_str = ''
         for i, order in enumerate(self.orientation_order):
-            token_str += Axis.toString(order) 
+            token_str += str(order)
             if i < len(self.orientation_order) - 1:
                 token_str += ' '
         
-        output += 'Orientation Order: %s\n' %( token_str )
-        output += 'Position: %s\n' %( self.position.toString('(', ', ', ')') )
-        output += 'Orientation: %s\n' %( self.orientation.toString('(', ', ', ')') )
+        output += 'Orientation Order: %s ' %( token_str )
+        output += 'Position: %s ' %( self.position.toString('(', ', ', ')') )
+        output += 'Orientation: %s' %( self.orientation.toString('(', ', ', ')') )
         
         return output
     

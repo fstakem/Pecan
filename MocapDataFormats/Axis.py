@@ -18,33 +18,45 @@ class Axis(object):
     X = 1
     Y = 2
     Z = 3
-    UNDEFINED = 1000
     
     # -----------------------------------------------------------------------
     #       Class Functions
     # -----------------------------------------------------------------------
-    @classmethod
-    def getAxisFromString(cls, axis):
-        axis = axis.lower()
-        if axis == 'x':
-            return cls.X
-        elif axis == 'y':
-            return cls.Y
-        elif axis == 'z':
-            return cls.Z
-        
-        return cls.UNDEFINED
+    # None
     
-    @classmethod
-    def toString(cls, axis):
-        if axis == cls.X:
-            return 'X'
-        elif axis == cls.Y:
-            return 'Y'
-        elif axis == cls.Z:
-            return 'Z'
+    
+    # -----------------------------------------------------------------------
+    #       Instance Functions
+    # -----------------------------------------------------------------------
+    def __init__(self, axis_str):
+        self.value = None
         
-        return '?'
+        axis = axis_str.lower()
+        if axis == 'x':
+            self.value = Axis.X
+        elif axis == 'y':
+            self.value = Axis.Y
+        elif axis == 'z':
+            self.value = Axis.Z
+        else:
+            raise Exception('Incorrect value: %s' % (str(axis_str)))
+        
+    def __str__(self):
+        if self.value == Axis.X:
+            return 'X'
+        elif self.value == Axis.Y:
+            return 'Y'
+        elif self.value == Axis.Z:
+            return 'Z'
+    
+    def __eq__(self, other):
+        if self.value == other.value:
+            return True
+        
+        return False
+    
+    
+    
 
 
 
