@@ -60,13 +60,7 @@ class Vector(object):
         self.y = -self.y
         self.z = -self.z
         return self
-    
-    def __pos__(self):
-        self.x = +self.x
-        self.y = +self.y
-        self.z = +self.z
-        return self
-            
+                
     def __add__(self, vector):
         return Vector(self.x + vector.x,
                       self.y + vector.y,

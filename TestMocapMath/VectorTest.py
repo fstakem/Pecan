@@ -27,47 +27,139 @@ class VectorTest(unittest.TestCase):
     logger.addHandler(handler)
     
     def setUp(self):
-        pass
+        self.a = Vector(1.0, 1.0, 1.0)
+        self.b = Vector(2.0, 2.0, 2.0)
+        self.c = Vector(-1.0, -1.0, -1.0)
+        self.d = Vector(-2.0, -2.0, -2.0)
+        self.e = Vector(3.0, 3.0, 3.0)
+        self.f = Vector(-3.0, -3.0, -3.0)
     
     def tearDown(self):
         pass
     
     @log_test(logger, globals.log_seperator)
     def testNegative(self):
-        a = Vector(1.0, 1.0, 1.0)
-        assert -a == Vector(-1.0, -1.0, -1.0), 'Incorrect vector value: %s' % (str(a))
+        VectorTest.logger.info( 'Taking the negative value of: %s' % (str(self.a)) )
+        VectorTest.logger.info( 'Result: %s' % (str(-Vector(self.a))) )
+        assert -self.a == self.c, 'Incorrect vector value: %s' % (str(-self.a))
         
-        a = Vector(-1.0, -1.0, -1.0)
-        assert -a == Vector(1.0, 1.0, 1.0), 'Incorrect vector value: %s' % (str(a))
-        
-    @log_test(logger, globals.log_seperator)   
-    def testPositive(self):
-        a = Vector(-1.0, -1.0, -1.0)
-        assert +a == Vector(1.0, 1.0, 1.0), 'Incorrect vector value: %s' % (str(a))
-        
+        VectorTest.logger.info( 'Taking the negative value of: %s' % (str(self.d)) )
+        VectorTest.logger.info( 'Result: %s' % (str(-Vector(self.d))) )
+        assert -self.d == self.b, 'Incorrect vector value: %s' % (str(-self.d))
+                
     @log_test(logger, globals.log_seperator)
     def testAdd(self):
-        pass
-    
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.a), str(self.b)) )
+        z = self.a + self.b
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.e, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.b), str(self.c)) )
+        z = self.b + self.c
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.c), str(self.d)) )
+        z = self.c + self.d
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.f, 'Incorrect vector value: %s' % (str(z))
+        
+        self.assertRaises(AttributeError, Vector.__add__, self.a, 1)
+        
     @log_test(logger, globals.log_seperator)
     def testReflectiveAdd(self):
-        pass
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.a), str(self.b)) )
+        z = self.a + self.b
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.e, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.b), str(self.c)) )
+        z = self.b + self.c
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.c), str(self.d)) )
+        z = self.c + self.d
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.f, 'Incorrect vector value: %s' % (str(z))
+        
+        self.assertRaises(AttributeError, Vector.__radd__, self.a, 1)
     
     @log_test(logger, globals.log_seperator)
     def testAugmentedAdd(self):
-        pass
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.a), str(self.b)) )
+        self.a += self.b
+        VectorTest.logger.info( 'Result: %s' % (str(self.a)) )
+        assert self.a == self.e, 'Incorrect vector value: %s' % (str(self.a))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.b), str(self.c)) )
+        self.b += self.c
+        VectorTest.logger.info( 'Result: %s' % (str(self.b)) )
+        assert self.b == Vector(1.0, 1.0, 1.0), 'Incorrect vector value: %s' % (str(self.b))
+        
+        VectorTest.logger.info( 'Adding %s to %s.' % (str(self.c), str(self.d)) )
+        self.c += self.d
+        VectorTest.logger.info( 'Result: %s' % (str(self.c)) )
+        assert self.c == self.f, 'Incorrect vector value: %s' % (str(self.c))
+        
+        self.assertRaises(AttributeError, Vector.__iadd__, self.a, 1)
     
     @log_test(logger, globals.log_seperator)
     def testSubtract(self):
-        pass
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.a), str(self.b)) )
+        z = self.b - self.a
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.b), str(self.c)) )
+        z = self.c - self.b
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.f, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.c), str(self.d)) )
+        z = self.d - self.c
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.c, 'Incorrect vector value: %s' % (str(z))
+        
+        self.assertRaises(AttributeError, Vector.__sub__, self.a, 1)
     
     @log_test(logger, globals.log_seperator)
     def testReflectiveSubtract(self):
-        pass
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.a), str(self.b)) )
+        z = self.b - self.a
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.b), str(self.c)) )
+        z = self.c - self.b
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.f, 'Incorrect vector value: %s' % (str(z))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.c), str(self.d)) )
+        z = self.d - self.c
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.c, 'Incorrect vector value: %s' % (str(z))
+        
+        self.assertRaises(AttributeError, Vector.__rsub__, self.a, 1)
     
     @log_test(logger, globals.log_seperator)
     def testAugmentedSubtract(self):
-        pass
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.a), str(self.b)) )
+        self.b -= self.a
+        VectorTest.logger.info( 'Result: %s' % (str(self.b)) )
+        assert self.b == self.a, 'Incorrect vector value: %s' % (str(self.b))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.a), str(self.d)) )
+        self.d -= self.a
+        VectorTest.logger.info( 'Result: %s' % (str(self.d)) )
+        assert self.d == self.f, 'Incorrect vector value: %s' % (str(self.d))
+        
+        VectorTest.logger.info( 'Subtracting %s from %s.' % (str(self.c), str(self.f)) )
+        self.c -= self.f
+        VectorTest.logger.info( 'Result: %s' % (str(self.c)) )
+        assert self.c == Vector(2.0, 2.0, 2.0), 'Incorrect vector value: %s' % (str(self.c))
+        
+        self.assertRaises(AttributeError, Vector.__isub__, self.a, 1)
     
     @log_test(logger, globals.log_seperator)
     def testMultiply(self):
