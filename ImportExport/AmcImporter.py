@@ -43,8 +43,6 @@ class AmcImporter(object):
     def parseData(cls, raw_lines):
         cls.logger.info('parseData(): Entering method.')
         
-        # Add exceptions
-        
         frames = AmcImporter.seperateFrames(raw_lines)
         acclaim_frames = OrderedDict()
         bones = []
@@ -52,13 +50,15 @@ class AmcImporter(object):
             acclaim_frame = AmcImporter.parseFrame(frames[key])
             
             if i == 0:
-                bones = acclaim_frame.keys()
+                bones = acclaim_frame.bone_orientations.keys()
             else:
-                AmcImporter.checkForAllBones(acclaim_frame, bones)
+                if not AmcImporter.checkForAllBones(acclaim_frame, bones):
+                    raise AcclaimParseException('Not all expected bones contained in the frame.')
             
             acclaim_frames[acclaim_frame.number] = acclaim_frame
             
         cls.logger.info('parseData(): Exiting method.')
+        return acclaim_frames
     
     @classmethod
     def seperateFrames(cls, raw_lines):
@@ -77,13 +77,16 @@ class AmcImporter(object):
             tokens = line.split()
             
             if tokens[0].isdigit():
-                if current_frame == None:
-                    current_frame = int(tokens[0])
-                    frame_lines = [current_frame]
-                else:
-                    frames[current_frame] = frame_lines
-                    current_frame = int(tokens[0])
-                    frame_lines = [current_frame]
+                try:
+                    if current_frame == None:
+                        current_frame = int(tokens[0])
+                        frame_lines = [current_frame]
+                    else:
+                        frames[current_frame] = frame_lines
+                        current_frame = int(tokens[0])
+                        frame_lines = [current_frame]
+                except ValueError:
+                    raise AcclaimParseException("The frame is improperly formed.")
             else:
                 frame_lines.append(line)
         
@@ -119,8 +122,14 @@ class AmcImporter(object):
     def checkForAllBones(cls, frame, all_bones):
         cls.logger.info('checkForAllBonesInFrame(): Entering method.')
         
-        # TODO
-        
+        for bone in all_bones:
+            try:
+                frame.bone_orientations[bone]
+            except KeyError:
+                return False
+            
+        return True
+         
         cls.logger.info('checkForAllBonesInFrame(): Exiting method.')
     
     

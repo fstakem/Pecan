@@ -15,11 +15,11 @@ import traceback
 from collections import OrderedDict
 
 # Classes
-from ImportExport import Utilities
-from ImportExport import AmcImporter
-from ImportExport import AcclaimParseException
-from MocapMath import Vector
-from MocapDataFormats import AcclaimFrame
+from Globals import *
+from Utilities import *
+from ImportExport import *
+from MocapMath import *
+from MocapDataFormats import *
 
 class AmcImporterTest(unittest.TestCase):
        
@@ -81,28 +81,21 @@ class AmcImporterTest(unittest.TestCase):
     def tearDown(self):
         pass
     
+    @log_test(logger, globals.log_seperator)
     def testParseData(self):
-        AmcImporterTest.logger.info('Starting: testParseData()')
-        
         try:
             AmcImporter.parseData(self.amc_lines)
         except AcclaimParseException:
             traceback.print_exc()
             assert False, 'The file was not properly parsed.'
-        
-        AmcImporterTest.logger.info('Finishing: testParseData()')
-    
+     
+    @log_test(logger, globals.log_seperator)   
     def testSeperateFrames(self):
-        AmcImporterTest.logger.info('Starting: testSeperateFrames()')
-        
         number_of_frames = len(self.amc_frames)
         assert number_of_frames == AmcImporterTest.NUMBER_OF_FRAMES, 'Incorrect number of frames parsed: %s' % (str(number_of_frames))
-        
-        AmcImporterTest.logger.info('Finishing: testSeperateFrames()')
-       
+      
+    @log_test(logger, globals.log_seperator) 
     def testParseFrame(self):
-        AmcImporterTest.logger.info('Starting: testParseFrame()')
-        
         try:
             acclaim_frame = AmcImporter.parseFrame(self.amc_frames[AmcImporterTest.FRAME_NUMBER])
             assert acclaim_frame.number == AmcImporterTest.FRAME_NUMBER, 'Incorrect frame: %s' % (str(acclaim_frame.number))
@@ -117,14 +110,25 @@ class AmcImporterTest(unittest.TestCase):
             traceback.print_exc()
             AmcImporterTest.logger.info('Frame: %s' % (str(acclaim_frame)))
             assert False, 'The frame was not properly parsed.' 
-            
-        AmcImporterTest.logger.info('Finishing: testParseFrame()')
-       
+    
+    @log_test(logger, globals.log_seperator)   
     def testCheckForAllBones(self):
-        AmcImporterTest.logger.info('Starting: testCheckForAllBonesInFrame()')
-        # TODO
-        AmcImporterTest.logger.info('Finishing: testCheckForAllBonesInFrame()')
-       
+        try:
+            acclaim_frame = AmcImporter.parseFrame(self.amc_frames[AmcImporterTest.FRAME_NUMBER])
+            assert acclaim_frame.number == AmcImporterTest.FRAME_NUMBER, 'Incorrect frame: %s' % (str(acclaim_frame.number))
+            
+            contains_all_bones = AmcImporter.checkForAllBones(acclaim_frame, AmcImporterTest.BONE_ORIENTATIONS.keys())
+            assert contains_all_bones, 'Not all the expected bones are contained in the frame.'
+            
+        except AcclaimParseException:
+            traceback.print_exc()
+            assert False, 'The frame was not properly parsed.'
+        except KeyError:
+            traceback.print_exc()
+            AmcImporterTest.logger.info('Frame: %s' % (str(acclaim_frame)))
+            assert False, 'The frame was not properly parsed.' 
+            
+    
 if __name__=='__main__':
    unittest.main()
    

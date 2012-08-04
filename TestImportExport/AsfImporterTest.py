@@ -12,16 +12,15 @@ import logging
 import unittest
 import traceback
 
-# Classes
-from ImportExport import Utilities
-from ImportExport import AsfImporter
-from ImportExport import AcclaimParseException
-from MocapMath import Vector
-from MocapDataFormats import Axis
-from MocapDataFormats import OperationOnAxis
+# Classes and functions
+from Globals import *
+from Utilities import *
+from ImportExport import *
+from MocapMath import *
+from MocapDataFormats import *
 
 class AsfImporterTest(unittest.TestCase):
-       
+    
     # Setup logging
     logger = logging.getLogger('AsfImporterTest')
     logger.setLevel(logging.DEBUG)
@@ -29,7 +28,7 @@ class AsfImporterTest(unittest.TestCase):
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    
+       
     # Class variables
     asf_filename = '../data/asf.asf'
     ASF_KEYWORD = 'KEYWORD'
@@ -61,29 +60,25 @@ class AsfImporterTest(unittest.TestCase):
         AsfImporterTest.logger.info('Setting up for the test.')
         
         AsfImporterTest.logger.info('Importing data from the file: ' + AsfImporterTest.asf_filename)
-        self.asf_lines = Utilities.readLinesFromFile(AsfImporterTest.asf_filename)
+        self.asf_lines = readLinesFromFile(AsfImporterTest.asf_filename)
         AsfImporterTest.logger.info('Read %i lines from the file.', len(self.asf_lines))
         
         AsfImporterTest.logger.info('Separating the ASF data into separate sections.')
         self.asf_sections = AsfImporter.seperateSections(self.asf_lines)
-        self.testSeperateSections()
         
     def tearDown(self):
         pass
     
+    @log_test(logger, globals.log_seperator) 
     def testParseData(self):
-        AsfImporterTest.logger.info('Starting: testParseData()')
-         
         try:
             AsfImporter.parseData(self.asf_lines)
         except AcclaimParseException:
             traceback.print_exc()
             assert False, 'The file was not properly parsed.'
-        
-        AsfImporterTest.logger.info('Finishing: testParseData()')
     
+    @log_test(logger, globals.log_seperator)
     def testSeperateSections(self):
-        AsfImporterTest.logger.info('Starting: testSeperateSections()')
         asf_class_members = AsfImporter.__dict__.keys()
         for asf_class_member in asf_class_members:
             if asf_class_member.split('_')[-1] == AsfImporterTest.ASF_KEYWORD:
@@ -95,36 +90,27 @@ class AsfImporterTest(unittest.TestCase):
                     traceback.print_exc()
                     AsfImporterTest.logger.info('Keyword: %s' % (keyword))
                     assert False, 'The %s section was not properly separated.' % (keyword)
-        
-        AsfImporterTest.logger.info('Finishing: testSeperateSections()')
-        
+     
+    @log_test(logger, globals.log_seperator)   
     def testParseVersion(self):
-        AsfImporterTest.logger.info('Starting: testParseVersion()')
-        
         try:
             version = AsfImporter.parseVersion(self.asf_sections)
             assert version == AsfImporterTest.VERSION, 'Incorrect value for the version number: %s' % (version)
         except AcclaimParseException:
             traceback.print_exc()
             assert False, 'The version section was not properly parsed.'
-        
-        AsfImporterTest.logger.info('Finishing: testParseVersion()')
     
+    @log_test(logger, globals.log_seperator)
     def testParseName(self):
-        AsfImporterTest.logger.info('Starting: testParseName()')
-        
         try:
             name = AsfImporter.parseName(self.asf_sections)
             assert name == AsfImporterTest.NAME, 'Incorrect value for the name: %s' % (name)
         except AcclaimParseException:
             traceback.print_exc()
             assert False, 'The name section was not properly parsed.'
-            
-        AsfImporterTest.logger.info('Finishing: testParseName()')
     
-    def testParseUnits(self):
-        AsfImporterTest.logger.info('Starting: testParseUnits()')
-              
+    @log_test(logger, globals.log_seperator)
+    def testParseUnits(self):  
         try:
             units = AsfImporter.parseUnits(self.asf_sections)
             assert units[AsfImporterTest.UNITS_MASS_KEY] == AsfImporterTest.UNITS_MASS_VALUE, 'Incorrect value for the units: %s' % (units[AsfImporterTest.UNITS_MASS_KEY])
@@ -137,24 +123,18 @@ class AsfImporterTest(unittest.TestCase):
             traceback.print_exc()
             AsfImporterTest.logger.info('Units: %s' % (str(units)))
             assert False, 'The units section was not properly parsed.'
-            
-        AsfImporterTest.logger.info('Finishing: testParseUnits()')
     
+    @log_test(logger, globals.log_seperator)
     def testParseDocumentation(self):
-        AsfImporterTest.logger.info('Starting: testParseDocumentation()')
-        
         try:
             documentation = AsfImporter.parseUnits(self.asf_sections)
         except AcclaimParseException:
             traceback.print_exc()
             AsfImporterTest.logger.info('Documentation:')
             assert False, 'The documentation section was not properly parsed.'
-            
-        AsfImporterTest.logger.info('Finishing: testParseDocumentation()')
     
+    @log_test(logger, globals.log_seperator)
     def testParseRoot(self):
-        AsfImporterTest.logger.info('Starting: testParseRoot()')
-        
         try:
             root = AsfImporter.parseRoot(self.asf_sections)
             for i, data_order in enumerate(AsfImporterTest.ROOT_ORDER):
@@ -168,12 +148,9 @@ class AsfImporterTest(unittest.TestCase):
         except AcclaimParseException:
             traceback.print_exc()
             assert False, 'The root section was not properly parsed.'
-            
-        AsfImporterTest.logger.info('Finishing: testParseRoot()')
     
+    @log_test(logger, globals.log_seperator)
     def testParseBones(self):
-        AsfImporterTest.logger.info('Starting: testParseBones()')
-           
         try:
             bones = AsfImporter.parseBones(self.asf_sections)
             bone = bones[AsfImporterTest.BONE_INDEX]
@@ -205,12 +182,9 @@ class AsfImporterTest(unittest.TestCase):
             AsfImporterTest.logger.info('Bone:')
             AsfImporterTest.logger.info('%s' % (str(bone)))
             assert False, 'The bone section was not properly parsed.'
-            
-        AsfImporterTest.logger.info('Finishing: testParseBones()')
-       
+     
+    @log_test(logger, globals.log_seperator)  
     def testParseHierarchy(self):
-        AsfImporterTest.logger.info('Starting: testParseHierarchy()')
-    
         try:
             hierarchy = AsfImporter.parseHierarchy(self.asf_sections)
             children = hierarchy[AsfImporterTest.HIERARCHY[0]]
@@ -226,8 +200,6 @@ class AsfImporterTest(unittest.TestCase):
         except ValueError:
             assert False, 'The hierarchy section did not contain: %s' % (bone)
         
-        AsfImporterTest.logger.info('Finishing: testParseHierarchy()')
-    
 if __name__=='__main__':
    unittest.main()
    
