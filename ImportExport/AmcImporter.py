@@ -33,12 +33,6 @@ class AmcImporter(object):
     # -----------------------------------------------------------------------
     #       Class Functions
     # -----------------------------------------------------------------------
-    # None
-    
-    
-    # -----------------------------------------------------------------------
-    #       Instance Functions
-    # -----------------------------------------------------------------------
     @classmethod
     def parseData(cls, raw_lines):
         cls.logger.info('parseData(): Entering method.')
@@ -131,6 +125,11 @@ class AmcImporter(object):
         return True
          
         cls.logger.info('checkForAllBonesInFrame(): Exiting method.')
+        
+    # -----------------------------------------------------------------------
+    #       Instance Functions
+    # -----------------------------------------------------------------------
+    # None
     
     
     
