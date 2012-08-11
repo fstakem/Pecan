@@ -115,10 +115,10 @@ class Vector(object):
             return False
     
     def __abs__(self):
-        abs(self.x)
-        abs(self.y)
-        abs(self.z)
-        return self
+        x = abs(self.x)
+        y = abs(self.y)
+        z = abs(self.z)
+        return Vector(x, y, z)
     
     def __getitem__(self, index):
         if index == 0:

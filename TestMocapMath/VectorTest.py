@@ -331,13 +331,15 @@ class VectorTest(unittest.TestCase):
     
     @log_test(logger, globals.log_seperator)
     def testAbsoluteValue(self):
-        # TODO
-        z = Vector(1.0, 1.0, 1.0)
         VectorTest.logger.info( 'Operation: abs( %s )' % (str(self.a)) )
-        assert abs(self.a) == z, 'Incorrect vector value: %s' % (str(self.a))
+        z = abs(self.a)
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
         
         VectorTest.logger.info( 'Operation: abs( %s )' % (str(self.c)) )
-        assert abs(self.c) == z, 'Incorrect vector value: %s' % (str(self.c))
+        z = abs(self.c)
+        VectorTest.logger.info( 'Result: %s' % (str(z)) )
+        assert z == self.a, 'Incorrect vector value: %s' % (str(z))
     
     @log_test(logger, globals.log_seperator)
     def testGetItem(self):
@@ -371,37 +373,124 @@ class VectorTest(unittest.TestCase):
     
     @log_test(logger, globals.log_seperator)
     def testCall(self):
-        pass
+        z = 2.5
+        VectorTest.logger.info( 'Operation: v(%s, %s, %s)' % (str(z), str(z), str(z)) )
+        self.a(z, z, z)
+        assert self.a == Vector(z, z, z), 'Incorrect vector value: %s' % (str(self.a))
+        
+        y = (z, z, z)
+        VectorTest.logger.info( 'Operation: v( (%s, %s, %s) )' % (str(z), str(z), str(z)) )
+        self.a(y)
+        assert self.a == Vector(y), 'Incorrect vector value: %s' % (str(self.a))
+    
+        VectorTest.logger.info( 'Operation: v( %s )' % (str(self.c)) )
+        self.a(self.c)
+        assert self.a == self.c, 'Incorrect vector value: %s' % (str(self.a))
+    
+        self.assertRaises(ValueError, Vector.__call__, self.a, 1.0, 1.0, 1.0, 1.0)
     
     @log_test(logger, globals.log_seperator)
     def testString(self):
-        pass
+        VectorTest.logger.info( 'Operation: str(%s)' % (str(self.a)) )
+        vec_str = '(' + str( self.a.x ) + ", " + str( self.a.y ) + ", " + str( self.a.z ) + ')'
+        assert str(self.a) == vec_str, 'Incorrect vector value: %s' % (str(self.a))
     
     @log_test(logger, globals.log_seperator)
     def testToString(self):
-        pass
+        start_token = '('
+        separator = ';'
+        end_token = ')'
+        VectorTest.logger.info( 'Operation: v.ToString("%s", "%s", "%s")' % (start_token, separator, end_token) )
+        vec_str = start_token + str( self.a.x ) + separator + str( self.a.y ) + separator + str( self.a.z ) + end_token
+        a_str = self.a.toString(start_token, separator, end_token)
+        assert a_str == vec_str, 'Incorrect vector value: %s' % (a_str)
     
     @log_test(logger, globals.log_seperator)
     def testDistance(self):
-        pass
+        threshold = 0.001
+        z = 1.73205080757
+        VectorTest.logger.info( 'Operation: Vector( %s ).distance( Vector(%s) )' % (str(self.a), str(self.b)) )
+        y = self.a.distance(self.b)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+         
+        z = 3.46410161514                       
+        VectorTest.logger.info( 'Operation: Vector( %s ).distance( Vector(%s) )' % (str(self.a), str(self.c)) )
+        y = self.a.distance(self.c)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+           
+        z = 1.73205080757                     
+        VectorTest.logger.info( 'Operation: Vector( %s ).distance( Vector(%s) )' % (str(self.c), str(self.d)) )
+        y = self.c.distance(self.d)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
     
     @log_test(logger, globals.log_seperator)
     def testMagnitude(self):
-        pass
-    
+        threshold = 0.001
+        z = 1.73205080757
+        VectorTest.logger.info( 'Operation: Vector( %s ).magnitude()' % (str(self.a)) )
+        y = self.a.magnitude()
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+        
+        VectorTest.logger.info( 'Operation: Vector( %s ).magnitude()' % (str(self.c)) )
+        y = self.c.magnitude()
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+        
     @log_test(logger, globals.log_seperator)
     def testDot(self):
-        pass
-    
+        threshold = 0.001
+        z = 6.0
+        VectorTest.logger.info( 'Operation: Vector( %s ).dot(Vector( %s ))' % (str(self.a), str(self.b)) )
+        y = self.a.dot(self.b)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+        
+        z = -3.0
+        VectorTest.logger.info( 'Operation: Vector( %s ).dot(Vector( %s ))' % (str(self.a), str(self.c)) )
+        y = self.a.dot(self.c)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+        
+        z = 6.0
+        VectorTest.logger.info( 'Operation: Vector( %s ).dot(Vector( %s ))' % (str(self.c), str(self.d)) )
+        y = self.c.dot(self.d)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert lambda y, z, threshold: abs(y - z) < threshold, 'Incorrect vector value: %s' % (y)
+        
     @log_test(logger, globals.log_seperator)
     def testCross(self):
-        pass
-    
+        z  = Vector(1.0, 0.0, 0.0)
+        VectorTest.logger.info( 'Operation: Vector( %s ).cross(Vector( %s ))' % (str(self.a), str(z)) )
+        y = self.a.cross(z)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert y == Vector(0.0, 1.0, -1.0), 'Incorrect vector value: %s' % (y)
+        
+        VectorTest.logger.info( 'Operation: Vector( %s ).cross(Vector( %s ))' % (str(self.c), str(z)) )
+        y = self.c.cross(z)
+        VectorTest.logger.info( 'Result: %s' % (str(y)) )
+        assert y == Vector(0.0, -1.0, 1.0), 'Incorrect vector value: %s' % (y)
+        
     @log_test(logger, globals.log_seperator)
     def testNormalize(self):
-        pass  
-    
-if __name__=='__main__':
+        threshold = 0.1
+        x = 1.0
+        VectorTest.logger.info( 'Operation: Vector( %s ).normalize()' % (str(self.a)))
+        self.a.normalize()
+        VectorTest.logger.info( 'Result: %s' % (str(self.a)) )
+        y = self.a.magnitude()
+        assert lambda y, x, threshold: abs(y - x) < threshold, 'Incorrect vector value: %s' % (y)
+        
+        VectorTest.logger.info( 'Operation: Vector( %s ).normalize()' % (str(self.c)))
+        self.c.normalize()
+        VectorTest.logger.info( 'Result: %s' % (str(self.c)) )
+        y = self.c.magnitude()
+        assert lambda y, x, threshold: abs(y - x) < threshold, 'Incorrect vector value: %s' % (y)
+        
+if __name__== '__main__':
    unittest.main()
    
    
