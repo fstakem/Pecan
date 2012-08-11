@@ -91,19 +91,16 @@ class Vector(object):
                       self.z * scalar)
         
     def __rmul__(self, scalar):
-        self.__mul__(scalar)
+        return self.__mul__(scalar)
     
     def __imul__(self, scalar):
-        self.__mul__(scalar)
+        return self.__mul__(scalar)
         
     def __div__(self, scalar):
-        self.__mul__(1.0 / scalar)
-        
-    def __rdiv__(self, scalar):
-        self.__div__(scalar)
-    
+        return self.__mul__(1.0 / scalar)
+           
     def __idiv__(self, scalar):
-        self.__div__(scalar)
+        return self.__div__(scalar)
     
     def __eq__(self, vector):
         if self.x == vector.x and self.y == vector.y and self.z == vector.z:
@@ -118,7 +115,10 @@ class Vector(object):
             return False
     
     def __abs__(self):
-        return self.__pos__()
+        abs(self.x)
+        abs(self.y)
+        abs(self.z)
+        return self
     
     def __getitem__(self, index):
         if index == 0:
