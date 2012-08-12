@@ -1,6 +1,6 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                            U D P  S E R V E R                           |
+#  |                                  H O S T                                |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
@@ -11,8 +11,9 @@
 
 # Classes
 
-class UdpServer(object):
-    """This is a class that transmits mocap state information with UDP."""
+class Host(object):
+    """This is a class that controls the transmission and reception of 
+       mocap state information."""
     
     # Class constants
     
@@ -26,4 +27,6 @@ class UdpServer(object):
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self):
-        pass
+        self.peers = []
+        self.transmitter = None
+        self.receiver = None
