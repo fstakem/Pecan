@@ -25,14 +25,14 @@ def log_all_tests(logger, log_seperators, prefix='test'):
 def log_test(logger, log_seperators):
     def log(func):
         def onCall(self):
-            logger.info(log_seperators[0])
-            logger.info('Starting: ' + func.func_name + '()')
+            logger.debug(log_seperators[0])
+            logger.debug('Starting: ' + func.func_name + '()')
             
             func(self)
             
-            logger.info('Finishing: ' + func.func_name + '()')
-            logger.info(log_seperators[1])
-            logger.info('')
+            logger.debug('Finishing: ' + func.func_name + '()')
+            logger.debug(log_seperators[1])
+            logger.debug('')
         return onCall
     return log
 

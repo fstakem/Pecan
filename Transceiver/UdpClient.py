@@ -40,4 +40,5 @@ class UdpClient(object):
     
     def sendMsg(self, server_address, server_port, msg): 
         UdpClient.logger.debug('Sending UDP packet to: %s:%s' % (server_address, str(server_port)))
-        self.socket.sendto(msg, server_address, server_port)
+        bytes_sent = self.socket.sendto(msg, (server_address, server_port))
+        UdpClient.logger.debug('Sent %s bytes.' % (str(bytes_sent)))

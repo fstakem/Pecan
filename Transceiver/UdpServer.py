@@ -38,6 +38,10 @@ class UdpServer(SocketServer.UDPServer, SocketServer.ThreadingMixIn):
     # -----------------------------------------------------------------------
     def __init__(self, server_address, handler_class=UdpServerHandler):
         SocketServer.UDPServer.__init__(self, server_address, handler_class)
+        self.last_request = None
+        
+    def _handle_request_noblock(self):
+        return SocketServer.UDPServer._handle_request_noblock(self)
                    
     
     
