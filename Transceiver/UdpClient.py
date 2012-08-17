@@ -12,6 +12,7 @@ import logging
 import socket
 
 # Classes
+from Message import Message
 
 class UdpClient(object):
     """This is a class that transmits mocap state information with UDP."""
@@ -40,5 +41,11 @@ class UdpClient(object):
     
     def sendMsg(self, server_address, server_port, msg): 
         UdpClient.logger.debug('Sending UDP packet to: %s:%s' % (server_address, str(server_port)))
-        bytes_sent = self.socket.sendto(msg, (server_address, server_port))
+        bytes_sent = self.socket.sendto(msg.convertToJson(), (server_address, server_port))
         UdpClient.logger.debug('Sent %s bytes.' % (str(bytes_sent)))
+        
+    def close(self):
+        self.socket.close()
+        
+        
+        

@@ -1,18 +1,19 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                             R E C E I V E R                             |
+#  |                  T R A N S M I T T E R  T H R E A D                     |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
 #  By: Fred Stakem 
-#  Date: 8.11.12
+#  Date: 8.16.12
 
 # Libraries
+import threading
 
 # Classes
 
-class Receiver(object):
-    """This is a class that receives mocap state information."""
+class TransmitterThread(threading.Thread):
+    """This is a class that thread transmits mocap state information."""
     
     # Class constants
     
@@ -25,9 +26,14 @@ class Receiver(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        self.server = None
-        self.sink = None
+    def __init__(self, client, source):
+        self.client = client
+        self.source = source
+        threading.Thread.__init__(self)
+        self.running = True
         
-    def start(self):
-        pass
+    def run(self):
+        while self.running:
+            pass
+
+        

@@ -1,18 +1,20 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                             R E C E I V E R                             |
+#  |                               M E S S A G E                             |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
 #  By: Fred Stakem 
-#  Date: 8.11.12
+#  Date: 8.15.12
 
 # Libraries
+#import jsonpickle
 
 # Classes
 
-class Receiver(object):
-    """This is a class that receives mocap state information."""
+class Message(object):
+    """This is a class that mocap state information is stored in before 
+       being transmitted and after being received."""
     
     # Class constants
     
@@ -25,9 +27,17 @@ class Receiver(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        self.server = None
-        self.sink = None
+    def __init__(self, data):
+        self.data = data
         
-    def start(self):
-        pass
+    def convertToJson(self):
+        return self.data
+    
+    def getFromJson(self, msg):
+        self.data = msg
+        
+    def __eq__(self, msg):
+        if msg != None and self.data == msg.data:
+            return True
+        else:
+            return False

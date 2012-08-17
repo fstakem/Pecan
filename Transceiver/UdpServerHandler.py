@@ -12,6 +12,7 @@ import logging
 import SocketServer
 
 # Classes
+from Message import Message
 
 class UdpServerHandler(SocketServer.BaseRequestHandler):
     """This is a class handles mocap state information received from UDP."""
@@ -36,16 +37,26 @@ class UdpServerHandler(SocketServer.BaseRequestHandler):
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self, request, client_address, server):
+        self.rcvd_msg = None
         SocketServer.BaseRequestHandler.__init__(self, request, client_address, server)
+        
+    def setup(self):
+        SocketServer.BaseRequestHandler.setup(self)
         
     def handle(self):
         UdpServerHandler.logger.debug('Handling a UDP request.')
         
+        # Simply put the data here => parse complex message
         # TODO -> fill this with something useful
-        data = self.request[0].strip()
-        socket = self.request[1]
-        print "{} wrote:".format(self.client_address[0])
-        print data
+        self.rcvd_msg = Message(self.request[0].strip())
+    
+    def finish(self):
+        SocketServer.BaseRequestHandler.finish(self)
+        
+        
+        
+        
+        
         
     
     

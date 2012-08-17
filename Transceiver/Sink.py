@@ -1,18 +1,18 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                             R E C E I V E R                             |
+#  |                                 S I N K                                 |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
 #  By: Fred Stakem 
-#  Date: 8.11.12
+#  Date: 8.16.12
 
 # Libraries
 
 # Classes
 
-class Receiver(object):
-    """This is a class that receives mocap state information."""
+class Sink(object):
+    """This is a class that controls the flow of mocap state information."""
     
     # Class constants
     
@@ -26,8 +26,9 @@ class Receiver(object):
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self):
-        self.server = None
-        self.sink = None
+        self.data = None
+        self.rx_alg = None
         
-    def start(self):
+    def getEvent(self, time_delta):
         pass
+        
