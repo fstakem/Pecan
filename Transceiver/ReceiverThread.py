@@ -1,6 +1,6 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                               S O U R C E                               |
+#  |                     R E C E I V E R  T H R E A D                        |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
@@ -8,11 +8,14 @@
 #  Date: 8.16.12
 
 # Libraries
+import threading
+import time
 
 # Classes
+from Message import Message
 
-class Source(object):
-    """This is a class that controls the flow of mocap state information."""
+class ReceiverThread(threading.Thread):
+    """This is a class thread that receives mocap state information."""
     
     # Class constants
     
@@ -25,10 +28,15 @@ class Source(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        self.data = None
-        self.tx_alg = None
+    def __init__(self, start_time):
+        self.start_time = start_time
+        threading.Thread.__init__(self)
+        self.running = True
         
-    def getEvent(self, time_delta):
-        return 'event: %s' % (str(time_delta))
+    def run(self):
+        while self.running:
+            current_time = time.time()
+            delta_time = current_time - self.start_time
+            
+
         

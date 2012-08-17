@@ -28,6 +28,7 @@ class Receiver(object):
     def __init__(self):
         self.server = None
         self.sink = None
+        self.clients = []
         
     def start(self):
-        pass
+        self.clients = []
