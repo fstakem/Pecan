@@ -1,18 +1,19 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                               S O U R C E                               |
+#  |                T R A N S M I S S I O N  A L G O R I T M                 |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
 #  By: Fred Stakem 
-#  Date: 8.16.12
+#  Date: 8.22.12
 
 # Libraries
 
 # Classes
 
-class Source(object):
-    """This is a class that controls the flow of mocap state information."""
+class TransmissionAlgorithm(object):
+    """This is a class that dictates when mocap state information should be
+       transmitted."""
     
     # Class constants
     
@@ -25,10 +26,7 @@ class Source(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, data, tx_alg):
-        self.data = data
-        self.tx_alg = tx_alg
+    def __init__(self):
+        pass
         
-    def getEvent(self, time_delta):
-        return 'event: %s' % (str(time_delta))
         

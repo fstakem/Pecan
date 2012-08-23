@@ -27,16 +27,16 @@ class Transmitter(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        self.client = None
-        self.source = None
-        self.addresses = None
+    def __init__(self, client, source, remote_hosts):
+        self.client = client
+        self.source = source
+        self.remote_hosts = remote_hosts
         self.tx_thread = None
         self.start_time = 0
         
     def start(self):
         self.start_time = time.time()
-        self.tx_thread = TransmitterThread(self.client, self.source, self.addresses, self.start_time)
+        self.tx_thread = TransmitterThread(self.client, self.source, self.remote_hosts, self.start_time)
         self.tx_thread.start()
     
     def play(self):

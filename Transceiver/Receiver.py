@@ -25,10 +25,10 @@ class Receiver(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        self.server = None
-        self.sink = None
-        self.clients = []
+    def __init__(self, server, sink):
+        self.server = server
+        self.sink = sink
+        self.remote_hosts = []
         
     def start(self):
-        self.clients = []
+        self.remote_hosts = []

@@ -14,10 +14,17 @@ import unittest
 # Classes
 from Globals import *
 from Utilities import *
-from Tranceiver import Transmitter
-from Transceiver import TransmitterThread
+from Transceiver import Transmitter
 from Transceiver import Receiver
-from Transceiver import ReceiverThread
+from Transceiver import Message
+from Transceiver import UdpClient
+from Transceiver import UdpServer
+from Transceiver import UdpServerHandler
+from Transceiver import Source
+from Transceiver import Sink
+from NetworkingAlgorithms import TransmissionAlgorithm
+from NetworkingAlgorithms import ReconstructionAlgorithm
+
 
 class TxRxTest(unittest.TestCase):
     
@@ -30,9 +37,24 @@ class TxRxTest(unittest.TestCase):
     logger.addHandler(handler)
     
     # Class constants
+    server_address = 'localhost'
+    server_port = 8080
+    simple_msg = Message('This is a test.')
     
     def setUp(self):
-        pass
+        # Setup the transmitter
+        self.client = UdpClient()
+        self.data = TxRxTest.simple_msg
+        self.tx_alg = TransmissionAlgorithm()
+        self.source = Source(self.data, self.tx_alg)
+        self.remote_hosts = [ (TxRxTest.server_address, TxRxTest.server_port) ]
+        self.transmitter = Transmitter(self.client, self.source, self.remote_hosts)
+        
+        # Setup the receiver
+        self.server = UdpServer((TxRxTest.server_address, TxRxTest.server_port), UdpServerHandler)
+        self.rx_alg = ReconstructionAlgorithm()
+        self.sink = Sink(self.rx_alg)
+        self.receiver = Receiver(self.server, self.sink)
     
     def tearDown(self):
         pass

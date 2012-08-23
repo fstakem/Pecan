@@ -25,9 +25,9 @@ class Sink(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
+    def __init__(self, rx_alg):
         self.data = None
-        self.rx_alg = None
+        self.rx_alg = rx_alg
         
     def getEvent(self, time_delta):
         pass
