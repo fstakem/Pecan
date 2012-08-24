@@ -29,6 +29,6 @@ class Source(object):
         self.data = data
         self.tx_alg = tx_alg
         
-    def getEvent(self, time_delta):
-        return 'event: %s' % (str(time_delta))
+    def getEvent(self, playback_time):
+        return (playback_time, self.data)
         

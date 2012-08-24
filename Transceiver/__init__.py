@@ -1,7 +1,5 @@
 from Transmitter import Transmitter
 from Receiver import Receiver
-from TransmitterThread import TransmitterThread
-from ReceiverThread import ReceiverThread
 from Source import Source
 from Sink import Sink
 from UdpClient import UdpClient

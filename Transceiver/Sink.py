@@ -29,6 +29,6 @@ class Sink(object):
         self.data = None
         self.rx_alg = rx_alg
         
-    def getEvent(self, time_delta):
+    def setEvent(self, time_delta):
         pass
         

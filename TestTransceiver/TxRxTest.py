@@ -60,5 +60,12 @@ class TxRxTest(unittest.TestCase):
         pass
     
     @log_test(logger, globals.log_seperator)
-    def testxxx(self):
-        pass
+    def testSimpleConnectivity(self):
+        self.receiver.start()
+        self.transmitter.start()
+    
+    
+    
+    
+    
+    

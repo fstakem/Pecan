@@ -8,12 +8,13 @@
 #  Date: 8.11.12
 
 # Libraries
+import threading
 import time
 
 # Classes
-from TransmitterThread import TransmitterThread
+from Message import Message
 
-class Transmitter(object):
+class Transmitter(threading.Thread):
     """This is a class that transmits mocap state information."""
     
     # Class constants
@@ -27,23 +28,37 @@ class Transmitter(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, client, source, remote_hosts):
+    def __init__(self, client, source, remote_hosts, time_step_sec):
         self.client = client
         self.source = source
         self.remote_hosts = remote_hosts
-        self.tx_thread = None
-        self.start_time = 0
+        self.playback_time = 0
+        self.time_step_sec = time_step_sec
+        self.running = False
+        threading.Thread.__init__(self)
         
-    def start(self):
-        self.start_time = time.time()
-        self.tx_thread = TransmitterThread(self.client, self.source, self.remote_hosts, self.start_time)
-        self.tx_thread.start()
-    
-    def play(self):
-        pass
+    def start(self): 
+        self.running = True
+        threading.Thread.start(self)
+           
+    def stop(self):
+        self.running = False
         
-    def pause(self):
-        pass
+    def run(self):
+        initial_playback_time = self.playback_time
+        start_time = time.time()
+        while self.running:
+            current_time = time.time()
+            delta_time = current_time - start_time
+            self.playback_time = initial_playback_time + delta_time
+            next_event = self.source.getEvent(self.playback_time)
+            
+            if next_event != None:
+                msg = Message(next_event[1])
+                for host in self.remote_hosts:
+                    self.client.sendMsg(host['ip'], host['port'], msg.convertToJson())
+                    
+            time.sleep(self.time_step_sec)
     
     
     
