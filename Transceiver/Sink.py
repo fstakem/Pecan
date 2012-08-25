@@ -25,10 +25,11 @@ class Sink(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, rx_alg):
+    def __init__(self, rx_alg, rcvd_msg_callback=None):
         self.data = None
         self.rx_alg = rx_alg
+        self.rcvd_msg_callback = rcvd_msg_callback
         
-    def setEvent(self, time_delta):
+    def setNextMessage(self, msg):
         pass
         

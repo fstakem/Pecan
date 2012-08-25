@@ -10,6 +10,7 @@
 # Libraries
 
 # Classes
+from Message import Message
 
 class Source(object):
     """This is a class that controls the flow of mocap state information."""
@@ -29,6 +30,6 @@ class Source(object):
         self.data = data
         self.tx_alg = tx_alg
         
-    def getEvent(self, playback_time):
-        return (playback_time, self.data)
+    def getNextMessage(self, playback_time):
+        return Message(str(playback_time) + ": " + self.data)
         

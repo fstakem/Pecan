@@ -33,13 +33,14 @@ class UdpClientServerTest(unittest.TestCase):
     
     # Class constants
     server_address = 'localhost'
-    simple_msg = Message('This is a test.')
+    simple_msg = Message( 1, {'test_data': 12345} )
     
     def setUp(self):
         self.client = UdpClient()
         self.server = UdpServer( (UdpClientServerTest.server_address, 0), UdpServerHandler)
         self.ip_address, self.port = self.server.server_address
-        UdpClientServerTest.logger.debug( 'Server created with address: %s:%s' % (self.ip_address, self.port) )
+        UdpClientServerTest.logger.debug( 'UDP server created with address: %s:%s' % \
+                                          (self.ip_address, self.port) )
         self.server_thread = threading.Thread(name='udp server', target=self.server.serve_forever)
         self.server_thread.start()
     
@@ -50,7 +51,6 @@ class UdpClientServerTest(unittest.TestCase):
     @log_test(logger, globals.log_seperator)
     def testSimpleConnectivity(self):
         wait_time_for_msg = 0.5
-        UdpClientServerTest.logger.debug( 'Sending message: "%s"' % (self.simple_msg.convertToJson()) )
         self.client.sendMsg(self.ip_address, int(self.port), UdpClientServerTest.simple_msg)
         
         time.sleep(wait_time_for_msg)
@@ -58,7 +58,6 @@ class UdpClientServerTest(unittest.TestCase):
             assert False, 'No message received.'
             
         rcvd_msg = self.server.last_rcvd_msg
-        UdpClientServerTest.logger.debug( 'Received message: "%s"' % (rcvd_msg.convertToJson()) )
         assert UdpClientServerTest.simple_msg == rcvd_msg, 'Incorrect message value: %s' % \
                (rcvd_msg.convertToJson())
         

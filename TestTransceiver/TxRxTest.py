@@ -39,12 +39,14 @@ class TxRxTest(unittest.TestCase):
     # Class constants
     server_address = 'localhost'
     server_port = 8080
-    simple_msg = Message('This is a test.')
+    simple_msg = Message( 1, {'test_data': 12345} )
     
     def setUp(self):
         # Setup the transmitter
         self.client = UdpClient()
-        self.data = TxRxTest.simple_msg
+        # Need data and algorithm to transmit it
+        #self.data = TxRxTest.simple_msg
+        self.data = None
         self.tx_alg = TransmissionAlgorithm()
         self.source = Source(self.data, self.tx_alg)
         self.remote_hosts = [ (TxRxTest.server_address, TxRxTest.server_port) ]
@@ -52,6 +54,8 @@ class TxRxTest(unittest.TestCase):
         
         # Setup the receiver
         self.server = UdpServer((TxRxTest.server_address, TxRxTest.server_port), UdpServerHandler)
+        # Need reconstruction algorithm
+        # Need a callback for the sink as well
         self.rx_alg = ReconstructionAlgorithm()
         self.sink = Sink(self.rx_alg)
         self.receiver = Receiver(self.server, self.sink)
@@ -63,6 +67,9 @@ class TxRxTest(unittest.TestCase):
     def testSimpleConnectivity(self):
         self.receiver.start()
         self.transmitter.start()
+        
+    def verifySimpleConnectivity(self):
+        pass
     
     
     

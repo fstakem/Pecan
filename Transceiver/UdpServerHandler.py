@@ -9,6 +9,7 @@
 
 # Libraries
 import logging
+from datetime import datetime
 import SocketServer
 
 # Classes
@@ -44,11 +45,12 @@ class UdpServerHandler(SocketServer.BaseRequestHandler):
         SocketServer.BaseRequestHandler.setup(self)
         
     def handle(self):
-        UdpServerHandler.logger.debug('Handling a UDP request.')
+        UdpServerHandler.logger.debug('Handling a UDP packet.')
         
-        # Simply put the data here => parse complex message
-        # TODO -> fill this with something useful
-        self.rcvd_msg = Message(self.request[0].strip())
+        json_message = self.request[0].strip()
+        self.rcvd_msg = Message()
+        self.rcvd_msg.getFromJson(json_message)
+        self.rcvd_msg.rx_time = datetime.now()
     
     def finish(self):
         SocketServer.BaseRequestHandler.finish(self)

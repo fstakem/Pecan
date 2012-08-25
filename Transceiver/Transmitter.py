@@ -28,7 +28,7 @@ class Transmitter(threading.Thread):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, client, source, remote_hosts, time_step_sec):
+    def __init__(self, client, source, remote_hosts, time_step_sec=.001):
         self.client = client
         self.source = source
         self.remote_hosts = remote_hosts
@@ -51,12 +51,11 @@ class Transmitter(threading.Thread):
             current_time = time.time()
             delta_time = current_time - start_time
             self.playback_time = initial_playback_time + delta_time
-            next_event = self.source.getEvent(self.playback_time)
+            next_message = self.source.getNextMessage(self.playback_time)
             
-            if next_event != None:
-                msg = Message(next_event[1])
+            if next_message != None:
                 for host in self.remote_hosts:
-                    self.client.sendMsg(host['ip'], host['port'], msg.convertToJson())
+                    self.client.sendMsg(host['ip'], host['port'], next_message)
                     
             time.sleep(self.time_step_sec)
     

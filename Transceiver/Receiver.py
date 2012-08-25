@@ -46,8 +46,8 @@ class Receiver(threading.Thread):
         while self.running:
             pass
         
-    def newEvent(self):
-        pass
+    def newMsgRcvd(self, msg):
+        self.sink.setNextMessage(msg)
         
         
         
