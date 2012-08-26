@@ -27,6 +27,11 @@ class ReconstructionAlgorithm(object):
     #       Instance Functions
     # -----------------------------------------------------------------------
     def __init__(self):
-        pass
+        self.data = []
+        self.msgs = []
+        self.playback_time = 0
+        
+    def setNextMessage(self, msg):
+        return None
         
         

@@ -33,6 +33,7 @@ class SynchronousTxAlg(TransmissionAlgorithm):
         self.playback_time = 0
         
     def getNextMessage(self, new_time):
+        delta_time = new_time - self.playback_time
         return None
         
         
