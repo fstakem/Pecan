@@ -28,9 +28,10 @@ class Receiver(threading.Thread):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, server, sink):
+    def __init__(self, server, rx_alg, rcvd_msg_callback=None):
         self.server = server
-        self.sink = sink
+        self.rx_alg = rx_alg
+        self.rcvd_msg_callback = rcvd_msg_callback
         self.remote_hosts = []
         self.running = False
         threading.Thread.__init__(self)
@@ -47,7 +48,7 @@ class Receiver(threading.Thread):
             pass
         
     def newMsgRcvd(self, msg):
-        self.sink.setNextMessage(msg)
+        self.rx_alg.setNextMessage(msg)
         
         
         

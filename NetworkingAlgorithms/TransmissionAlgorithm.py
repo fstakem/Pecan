@@ -10,6 +10,7 @@
 # Libraries
 
 # Classes
+from Transceiver import Message
 
 class TransmissionAlgorithm(object):
     """This is a class that dictates when mocap state information should be
@@ -26,7 +27,11 @@ class TransmissionAlgorithm(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self):
-        pass
+    def __init__(self, data):
+        self.data = data
+        self.playback_time = 0
+        
+    def getNextMessage(self, new_time):
+        return None
         
         

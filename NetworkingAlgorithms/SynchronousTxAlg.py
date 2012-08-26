@@ -1,18 +1,21 @@
 #  .-------------------------------------------------------------------------.
 #  |                                                                         |
-#  |                                 S I N K                                 |
+#  |     S Y N C H R O N O U S  T R A N S M I S S I O N  A L G O R I T M     |
 #  |                                                                         |
 #  '-------------------------------------------------------------------------'
 
 #  By: Fred Stakem 
-#  Date: 8.16.12
+#  Date: 8.25.12
 
 # Libraries
 
 # Classes
+from Transceiver import Message
+from TransmissionAlgorithm import TransmissionAlgorithm
 
-class Sink(object):
-    """This is a class that controls the flow of mocap state information."""
+class SynchronousTxAlg(TransmissionAlgorithm):
+    """This is a class that dictates when mocap state information should be
+       transmitted."""
     
     # Class constants
     
@@ -25,11 +28,11 @@ class Sink(object):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, rx_alg, rcvd_msg_callback=None):
-        self.data = None
-        self.rx_alg = rx_alg
-        self.rcvd_msg_callback = rcvd_msg_callback
+    def __init__(self, data):
+        self.data = data
+        self.playback_time = 0
         
-    def setNextMessage(self, msg):
-        pass
+    def getNextMessage(self, new_time):
+        return None
+        
         

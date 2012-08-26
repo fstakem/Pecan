@@ -28,9 +28,9 @@ class Transmitter(threading.Thread):
     # -----------------------------------------------------------------------
     #       Instance Functions
     # -----------------------------------------------------------------------
-    def __init__(self, client, source, remote_hosts, time_step_sec=.001):
+    def __init__(self, client, tx_alg, remote_hosts, time_step_sec=.001):
         self.client = client
-        self.source = source
+        self.tx_alg = tx_alg
         self.remote_hosts = remote_hosts
         self.playback_time = 0
         self.time_step_sec = time_step_sec
@@ -58,7 +58,7 @@ class Transmitter(threading.Thread):
                     self.client.sendMsg(host['ip'], host['port'], next_message)
                     
             time.sleep(self.time_step_sec)
-    
+            
     
     
     
